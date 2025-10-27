@@ -52,13 +52,13 @@ source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
-```
+
 ## 2. Start the Database (PostgreSQL via Docker)
 
 Run Postgres using the provided Docker Compose file:
-```
+
 docker compose up -d
-```
+
 
 This will:
 
