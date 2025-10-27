@@ -167,9 +167,13 @@ you’re officially up and running 🎉
 Problem	Fix
 
 ❌ password authentication failed for user "fwc_user"	Check that your .env and alembic.ini use port 5433, not 5432.
+
 ❌ connection refused	Docker isn’t running or port not mapped — run docker ps and confirm 5433->5432/tcp.
+
 ❌ ModuleNotFoundError: No module named 'app'	Make sure you run Alembic from the project root (where alembic.ini lives), and app/__init__.py exists.
+
 ❌ Port 5433 already in use	Edit docker-compose.yml → change 5433:5432 to 5434:5432, and update .env + alembic.ini.
+
 ##** Quick Commands Cheat Sheet**
 ### Start DB
 docker compose up -d
