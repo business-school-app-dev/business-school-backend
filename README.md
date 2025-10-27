@@ -37,9 +37,8 @@ Before you start, make sure you have:
 
 ---
 
-## 🐍 1. Clone and Set Up Virtual Environment
+##  1. Clone and Set Up Virtual Environment
 
-```bash
 git clone <repo-url>
 cd business-school-backend
 
@@ -53,14 +52,13 @@ source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
-
-
-🐳 2. Start the Database (PostgreSQL via Docker)
+```
+## 2. Start the Database (PostgreSQL via Docker)
 
 Run Postgres using the provided Docker Compose file:
-
+```
 docker compose up -d
-
+```
 
 This will:
 
@@ -88,7 +86,7 @@ Expected output:
 CONTAINER ID   IMAGE         PORTS
 xxxxxx         postgres:16   0.0.0.0:5433->5432/tcp
 
-🌱 3. Configure Environment Variables
+##🌱 3. Configure Environment Variables
 
 Create a .env file in the project root (same folder as alembic.ini):
 
