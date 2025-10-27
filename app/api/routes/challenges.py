@@ -296,7 +296,8 @@ def get_questions():
             "id": question["id"],
             "text": question["text"],
             "difficulty": question["difficulty"],
-            "options": question["options"]
+            "options": question["options"],
+            "answer": question["correct_answer"]
         })
     
     return jsonify({
