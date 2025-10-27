@@ -1,0 +1,203 @@
+# 💰 Financial Wellness Center — Backend Setup Guide
+
+Welcome to the **UMD Financial Wellness Center Backend**!  
+This guide walks you through setting up the backend and local database on your own laptop — no prior Postgres or Docker experience needed.
+
+---
+
+## 🧠 Overview
+
+**Tech stack:**
+- Python (Flask)
+- PostgreSQL (Docker container)
+- SQLAlchemy ORM
+- Alembic for schema migrations
+
+**Goal:**  
+Get the backend + database running locally with one command, and be able to run migrations and test endpoints.
+
+---
+
+## ⚙️ Prerequisites
+
+Before you start, make sure you have:
+
+1. **Python 3.9 or 3.10**  
+   - Check with:
+     ```bash
+     python --version
+     ```
+   - [Download Python](https://www.python.org/downloads/) if needed, and check “Add to PATH” during installation.
+
+2. **Docker Desktop**  
+   - [Download Docker Desktop](https://www.docker.com/products/docker-desktop/)  
+   - Open it once after installing.
+
+> 💡 You do *not* need to install PostgreSQL manually — we’ll run it in Docker.
+
+---
+
+## 🐍 1. Clone and Set Up Virtual Environment
+
+```bash
+git clone <repo-url>
+cd business-school-backend
+
+
+# Create and activate virtual environment
+python -m venv .venv
+# On Windows (PowerShell):
+.\.venv\Scripts\Activate.ps1
+# On macOS/Linux:
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+
+🐳 2. Start the Database (PostgreSQL via Docker)
+
+Run Postgres using the provided Docker Compose file:
+
+docker compose up -d
+
+
+This will:
+
+Pull the postgres:16 image
+
+Start a container named business-school-backend-db-1
+
+Create:
+
+Database: fwc_db
+
+User: fwc_user
+
+Password: fwc_pass
+
+Expose Postgres on localhost:5433
+
+Verify it’s running:
+
+docker ps
+
+
+Expected output:
+
+CONTAINER ID   IMAGE         PORTS
+xxxxxx         postgres:16   0.0.0.0:5433->5432/tcp
+
+🌱 3. Configure Environment Variables
+
+Create a .env file in the project root (same folder as alembic.ini):
+
+DATABASE_URL=postgresql+psycopg://fwc_user:fwc_pass@localhost:5433/fwc_db
+
+
+We include a .env.example in the repo — you can copy it:
+
+cp .env.example .env
+
+
+🧩 Why port 5433?
+Some laptops already use 5432 for another Postgres service, so we use 5433 to avoid conflicts.
+
+🧩 4. Apply Database Migrations
+
+Alembic creates your tables automatically.
+Make sure your venv is active ((.venv) in prompt) and run:
+
+alembic upgrade head
+
+
+You should see logs like:
+
+INFO  [alembic.runtime.migration] Running upgrade  -> <revision_id>, add users table
+
+
+This creates all your tables (like users) in the Postgres container.
+
+To confirm:
+
+# Optional, if you have psql installed
+psql "postgresql://fwc_user:fwc_pass@localhost:5433/fwc_db" -c "\dt"
+
+
+Expected:
+
+ Schema |      Name       | Type  |  Owner
+--------+-----------------+-------+----------
+ public | users           | table | fwc_user
+ public | alembic_version | table | fwc_user
+
+🧠 5. Run the Flask Backend
+
+Set your Flask environment variables and start the server:
+
+Windows PowerShell:
+$env:FLASK_APP="wsgi.py"
+$env:FLASK_ENV="development"
+flask run
+
+macOS/Linux:
+export FLASK_APP="wsgi.py"
+export FLASK_ENV="development"
+flask run
+
+
+Flask should start at:
+
+http://127.0.0.1:5000
+
+🧪 6. Test Your Setup
+
+Visit:
+
+http://127.0.0.1:5000/api/v1/health
+
+
+If you see:
+
+{ "status": "ok" }
+
+
+you’re officially up and running 🎉
+
+🧰 Common Issues & Fixes
+Problem	Fix
+❌ password authentication failed for user "fwc_user"	Check that your .env and alembic.ini use port 5433, not 5432.
+❌ connection refused	Docker isn’t running or port not mapped — run docker ps and confirm 5433->5432/tcp.
+❌ ModuleNotFoundError: No module named 'app'	Make sure you run Alembic from the project root (where alembic.ini lives), and app/__init__.py exists.
+❌ Port 5433 already in use	Edit docker-compose.yml → change 5433:5432 to 5434:5432, and update .env + alembic.ini.
+🧩 7. Quick Commands Cheat Sheet
+# Start DB
+docker compose up -d
+
+# Stop DB
+docker compose down
+
+# Run migrations
+alembic upgrade head
+
+# Create new migration after model change
+alembic revision --autogenerate -m "add new table"
+
+# Check tables
+psql "postgresql://fwc_user:fwc_pass@localhost:5433/fwc_db" -c "\dt"
+
+# Run Flask API
+flask run
+
+🧠 Developer Notes
+
+All models live in app/models.py
+
+Migrations live in migrations/versions/
+
+Database URL standard:
+postgresql+psycopg://fwc_user:fwc_pass@localhost:5433/fwc_db
+
+Don’t commit your local .env file — it’s in .gitignore
+
+Everyone’s DB setup is reproducible via Docker + Alembic
