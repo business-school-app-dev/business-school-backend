@@ -43,14 +43,14 @@ git clone <repo-url>
 cd business-school-backend
 
 
-# Create and activate virtual environment
+### Create and activate virtual environment
 python -m venv .venv
-# On Windows (PowerShell):
+### On Windows (PowerShell):
 .\.venv\Scripts\Activate.ps1
-# On macOS/Linux:
+### On macOS/Linux:
 source .venv/bin/activate
 
-# Install dependencies
+### Install dependencies
 pip install -r requirements.txt
 
 ## 2. Start the Database (PostgreSQL via Docker)
