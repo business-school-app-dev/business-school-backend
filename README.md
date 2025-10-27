@@ -174,7 +174,7 @@ Problem	Fix
 
 ❌ Port 5433 already in use	Edit docker-compose.yml → change 5433:5432 to 5434:5432, and update .env + alembic.ini.
 
-##** Quick Commands Cheat Sheet**
+## Quick Commands Cheat Sheet
 ### Start DB
 docker compose up -d
 
