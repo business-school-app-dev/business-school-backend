@@ -86,7 +86,7 @@ Expected output:
 CONTAINER ID   IMAGE         PORTS
 xxxxxx         postgres:16   0.0.0.0:5433->5432/tcp
 
-##🌱 3. Configure Environment Variables
+## 🌱 3. Configure Environment Variables
 
 Create a .env file in the project root (same folder as alembic.ini):
 
@@ -101,7 +101,7 @@ cp .env.example .env
 🧩 Why port 5433?
 Some laptops already use 5432 for another Postgres service, so we use 5433 to avoid conflicts.
 
-🧩 4. Apply Database Migrations
+## 🧩 4. Apply Database Migrations
 
 Alembic creates your tables automatically.
 Make sure your venv is active ((.venv) in prompt) and run:
