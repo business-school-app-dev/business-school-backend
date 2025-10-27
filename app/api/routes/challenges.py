@@ -257,21 +257,7 @@ questions = [
     }
 ]
 
-"""
-{
-    "id": 20,
-    "text": "What is the 50/30/20 budget rule?",
-    "difficulty": 2,
-    "options": [
-        "50% savings, 30% needs, 20% wants",
-        "50% needs, 30% wants, 20% savings",
-        "50% investments, 30% expenses, 20% cash",
-        "50% rent, 30% food, 20% utilities"
-    ],
-    "correct_answer": 1
-}
-"""
-user_answers = [] #store user answers here
+
 
 def get_difficulty():
     easy = []
