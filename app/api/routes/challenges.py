@@ -306,6 +306,8 @@ def get_questions():
     }), 200
 
 
+# Maybe look into validating answers in the front end
+
 @app.route('/answers', methods=['POST'])
 def submit_answer():
     is_correct = False
@@ -332,3 +334,20 @@ def submit_answer():
         "is_correct": is_correct,
         "correct_answer": question_found["correct_answer"]
     }), 200
+
+@app.route('/topten'm methods=['GET'])
+def get_top_ten():
+    # count = session.query(userData.userID).count()
+    # users = select(userData).order_by(desc(userData.c.trophies))
+    
+    # Experimental code to get the top 10 users from the database using sql alchemy
+    if(count < 10) {
+        top_users = users[0:count]
+    } else {
+        top_users = users[:10]
+    }
+
+    return jsonify({
+        "success": True,
+        "user_list": top_users
+    })
