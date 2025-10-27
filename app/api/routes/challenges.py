@@ -265,15 +265,15 @@ def get_difficulty():
     hard = []
 
     for question in questions:
-        if question["difficulty"] == 1:
+        if question["difficulty"] == "e":
             easy.append(question)
     
     for question in questions:
-        if question["difficulty"] == 2:
+        if question["difficulty"] == "m":
             medium.append(question)
 
     for question in questions:
-        if question["difficulty"] == 3:
+        if question["difficulty"] == "h":
             hard.append(question)
     
     # easy = session.query(questions).filter_by(difficulty = 'e')
