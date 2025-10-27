@@ -168,20 +168,20 @@ Problem	Fix
 ❌ connection refused	Docker isn’t running or port not mapped — run docker ps and confirm 5433->5432/tcp.
 ❌ ModuleNotFoundError: No module named 'app'	Make sure you run Alembic from the project root (where alembic.ini lives), and app/__init__.py exists.
 ❌ Port 5433 already in use	Edit docker-compose.yml → change 5433:5432 to 5434:5432, and update .env + alembic.ini.
-🧩 7. Quick Commands Cheat Sheet
-# Start DB
+##** Quick Commands Cheat Sheet**
+### Start DB
 docker compose up -d
 
-# Stop DB
+### Stop DB
 docker compose down
 
-# Run migrations
+### Run migrations
 alembic upgrade head
 
-# Create new migration after model change
+### Create new migration after model change
 alembic revision --autogenerate -m "add new table"
 
-# Check tables
+### Check tables
 psql "postgresql://fwc_user:fwc_pass@localhost:5433/fwc_db" -c "\dt"
 
 # Run Flask API
