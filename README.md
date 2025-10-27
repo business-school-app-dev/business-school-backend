@@ -118,7 +118,7 @@ This creates all your tables (like users) in the Postgres container.
 
 To confirm:
 
-# Optional, if you have psql installed
+### Optional, if you have psql installed
 psql "postgresql://fwc_user:fwc_pass@localhost:5433/fwc_db" -c "\dt"
 
 
@@ -184,10 +184,10 @@ alembic revision --autogenerate -m "add new table"
 ### Check tables
 psql "postgresql://fwc_user:fwc_pass@localhost:5433/fwc_db" -c "\dt"
 
-# Run Flask API
+### Run Flask API
 flask run
 
-🧠 Developer Notes
+## Developer Notes
 
 All models live in app/models.py
 
