@@ -6,7 +6,7 @@ questions = [
     {
         "id": 0,
         "text": "What is financial literacy?",
-        "difficulty": 'e',
+        "difficulty": 1,
         "options": [
             "The ability to understand and use financial skills",
             "The study of literature about finance",
@@ -18,7 +18,7 @@ questions = [
     {
         "id": 1,
         "text": "What does APR stand for in finance?",
-        "difficulty": 'e',
+        "difficulty": 1,
         "options": [
             "Annual Payment Rate",
             "Annual Percentage Rate",
@@ -30,7 +30,7 @@ questions = [
     {
         "id": 2,
         "text": "What is a budget?",
-        "difficulty": 'e',
+        "difficulty": 1,
         "options": [
             "A financial plan for income and expenses",
             "A type of savings account",
@@ -42,7 +42,7 @@ questions = [
     {
         "id": 3,
         "text": "What is compound interest?",
-        "difficulty": 'm',
+        "difficulty": 2,
         "options": [
             "Interest calculated only on the principal",
             "Interest that decreases over time",
@@ -54,7 +54,7 @@ questions = [
     {
         "id": 4,
         "text": "What is a credit score used for?",
-        "difficulty": 'e',
+        "difficulty": 1,
         "options": [
             "Measuring how much debt you have",
             "Evaluating creditworthiness for loans and credit",
@@ -66,7 +66,7 @@ questions = [
     {
         "id": 5,
         "text": "What is diversification in investing?",
-        "difficulty": 'm',
+        "difficulty": 2,
         "options": [
             "Investing all money in one stock",
             "Spreading investments across different assets",
@@ -78,7 +78,7 @@ questions = [
     {
         "id": 6,
         "text": "What is an emergency fund?",
-        "difficulty": 'e',
+        "difficulty": 1,
         "options": [
             "Money saved for unexpected expenses",
             "A government assistance program",
@@ -90,7 +90,7 @@ questions = [
     {
         "id": 7,
         "text": "What does it mean to live paycheck to paycheck?",
-        "difficulty": 'e',
+        "difficulty": 1,
         "options": [
             "Getting paid twice a month",
             "Having no savings and spending all income before the next paycheck",
@@ -102,7 +102,7 @@ questions = [
     {
         "id": 8,
         "text": "What is a 401(k)?",
-        "difficulty": 'm',
+        "difficulty": 2,
         "options": [
             "A type of credit card",
             "A retirement savings plan sponsored by employers",
@@ -114,7 +114,7 @@ questions = [
     {
         "id": 9,
         "text": "What is inflation?",
-        "difficulty": 'm',
+        "difficulty": 2,
         "options": [
             "The decrease in prices over time",
             "The increase in general price levels over time",
@@ -126,7 +126,7 @@ questions = [
     {
         "id": 10,
         "text": "What is the difference between a debit and credit card?",
-        "difficulty": 'e',
+        "difficulty": 1,
         "options": [
             "No difference, they work the same way",
             "Debit uses your own money, credit borrows from the bank",
@@ -138,7 +138,7 @@ questions = [
     {
         "id": 11,
         "text": "What is equity in a home?",
-        "difficulty": 'm',
+        "difficulty": 2,
         "options": [
             "The monthly mortgage payment",
             "The difference between home value and what you owe",
@@ -150,7 +150,7 @@ questions = [
     {
         "id": 12,
         "text": "What is a stock?",
-        "difficulty": 'e',
+        "difficulty": 1,
         "options": [
             "A type of savings account",
             "Ownership share in a company",
@@ -162,7 +162,7 @@ questions = [
     {
         "id": 13,
         "text": "What does ROI stand for?",
-        "difficulty": 'm',
+        "difficulty": 2,
         "options": [
             "Rate of Income",
             "Return on Investment",
@@ -174,7 +174,7 @@ questions = [
     {
         "id": 14,
         "text": "What is a mutual fund?",
-        "difficulty": 'm',
+        "difficulty": 2,
         "options": [
             "A bank savings account",
             "A pooled investment vehicle managed by professionals",
@@ -186,7 +186,7 @@ questions = [
     {
         "id": 15,
         "text": "What is net worth?",
-        "difficulty": 'm',
+        "difficulty": 2,
         "options": [
             "Your annual salary",
             "Total assets minus total liabilities",
@@ -198,7 +198,7 @@ questions = [
     {
         "id": 16,
         "text": "What is a tax deduction?",
-        "difficulty": 'm',
+        "difficulty": 2,
         "options": [
             "A penalty for not paying taxes",
             "An expense that reduces taxable income",
@@ -210,7 +210,7 @@ questions = [
     {
         "id": 17,
         "text": "What does FICO score measure?",
-        "difficulty": 'm',
+        "difficulty": 2,
         "options": [
             "Your income level",
             "Your credit risk and payment history",
@@ -222,7 +222,7 @@ questions = [
     {
         "id": 18,
         "text": "What is liquidity in finance?",
-        "difficulty": 'h',
+        "difficulty": 3,
         "options": [
             "How much debt you have",
             "How easily an asset can be converted to cash",
@@ -234,7 +234,7 @@ questions = [
     {
         "id": 19,
         "text": "What is dollar-cost averaging?",
-        "difficulty": 'h',
+        "difficulty": 3,
         "options": [
             "Investing all money at once",
             "Investing fixed amounts at regular intervals",
@@ -246,7 +246,7 @@ questions = [
     {
         "id": 20,
         "text": "What is the 50/30/20 budget rule?",
-        "difficulty": 'm',
+        "difficulty": 2,
         "options": [
             "50% savings, 30% needs, 20% wants",
             "50% needs, 30% wants, 20% savings",
@@ -265,15 +265,15 @@ def get_difficulty():
     hard = []
 
     for question in questions:
-        if question["difficulty"] == "e":
+        if question["difficulty"] == 1:
             easy.append(question)
     
     for question in questions:
-        if question["difficulty"] == "m":
+        if question["difficulty"] == 2:
             medium.append(question)
 
     for question in questions:
-        if question["difficulty"] == "h":
+        if question["difficulty"] == 3:
             hard.append(question)
     
     # easy = session.query(questions).filter_by(difficulty = 'e')
@@ -339,11 +339,12 @@ def submit_answer():
         "is_correct": is_correct,
         "correct_answer": question_found["correct_answer"]
     }), 200
+'''
 
 @app.route('/topten'm methods=['GET'])
 def get_top_ten():
-    # count = session.query(userData.userID).count()
-    # users = select(userData).order_by(desc(userData.c.trophies))
+    count = session.query(userData.userID).count()
+    users = select(userData).order_by(desc(userData.c.trophies))
     
     # Experimental code to get the top 10 users from the database using sql alchemy
     if(count < 10) {
@@ -356,3 +357,4 @@ def get_top_ten():
         "success": True,
         "user_list": top_users
     })
+'''
