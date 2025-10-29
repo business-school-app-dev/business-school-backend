@@ -19,20 +19,20 @@ def run_simulation():
     data = request.get_json()
     df = pd.read_csv("Washington__D_C__Software_Engineer_Use_Cases__5_rows_.csv")
     row = df[df["current_age"] == current_age].iloc[0].to_dict() # finds the row with the age (in our case from the params)
-    risk_profile = data.get("risk", "medium")
+    risk_profile = data.get("risk") # low, medium, high
 
     salary = row["starting_salary"]
     salary_mu = row["salary_growth_mu"]
-    salary_sigma = row["salary_growth_sigma"]
+    salary_sigma = row["salary_growth_sigma"] #found a distribution that i can run over (will assume growth is the same)
 
-    lifestyle_spend_pct = row["lifestyle_spend_pct"]
+    lifestyle_spend_pct = row["lifestyle_spend_pct"] 
     tax_rate = row["effective_tax_rate"]
 
     home_value = row["home_value"]
     home_mu = row["home_growth_mu"]
-    home_sigma = row["home_growth_sigma"]
+    home_sigma = row["home_growth_sigma"]  # same thing with home (assume distribution is the same)
 
-    mortgage_balance = row["mortgage_balance"]
+    mortgage_balance = row["mortgage_balance"] 
     mortgage_apr = row["mortgage_apr"]
 
     balance_401k = row["balance_401k"]
@@ -46,56 +46,78 @@ def run_simulation():
     child_years = row["children_years"]
     
     # For the data that provides a mean and stdev, we're gonna run multiple samples of it to simulate variance and chance.
+    # want to run the simulation for salary growth once then hold that value 
     num_samples = 10000
     years = 10
-    rng = np.random.default_rng(seed=42) # creates a generator
-    salary_growths = rng.normal(salary_mu, salary_sigma, (num_samples, years)) # this is where the monte carlo takes place
-    salary_final_mean = np.mean(salary_growths)
-    salary_final_sigma = np.std(salary_growths)
+    #rng = np.random.default_rng(seed=42) # creates a generator
+    # salary_growths = rng.normal(salary_mu, salary_sigma, (num_samples, years)) # this is where the monte carlo takes place
+    # salary_final_mean = np.mean(salary_growths)
+    # salary_final_sigma = np.std(salary_growths)
 
     home_growths = rng.normal(home_mu, home_sigma, (num_samples, years))
     home_final_mean = np.mean(home_growths)
     home_final_sigma = np.std(home_growths)
 
-    investment_risk = {
-        "low" : (0.04, 0.07),
-        "medium" : (0.06, 0.12),
-        "high" : (0.08, 0.18),
+    investment_risk = { # what do the numbers here represent?
+        "low" : [0.04, 0.07],
+        "medium" : [0.06, 0.12],
+        "high" : [0.08, 0.18],
     }
     
-    inv_mu, inv_sigma = investment_risk.get(risk_profile, (0.06, 0.12))
+    inv_mu = investment_risk.get(risk_profile)[0]
+    inv_sigma = investment_risk.get(risk_profile)[1]
     market_returns = rng.normal(inv_mu, inv_sigma, (num_samples, years))
-
     networths = []
-
+    rng = np.random.default_rng(seed=42)
     for i in range(num_samples):
-        W = (home_value - mortgage_balance + balance_ira + balance_401k + balance_taxable)
-        s = salary
-        hv = home_value
+        #W = (home_value - mortgage_balance + balance_ira + balance_401k + balance_taxable)
+        local_salary = salary
+        local_hv = home_value
         mb = mortgage_balance
-        ira = balance_ira
-        k401 = balance_401k
-        taxable = balance_taxable
+        local_ira = balance_ira
+        local_401k = balance_401k
+        local_taxable = balance_taxable
+        # runs a simulation on salary growth - has a local array and takes the mean growth
+        # compounds that to the salary
+        for year in range(years): # repeats once for each year 
+            salary_growths = rng.normal(salary_mu, salary_sigma, num_samples) # this is where the monte carlo takes place
+            salary_final_mean = np.mean(salary_growths)
+            salary_final_sigma = np.std(salary_growths)
+            local_salary *= (1 + salary_final_mean) # compounds the salary
 
-        for year in range(years):
-            salary_rate = salary_growths[i, year]
-            home_rate = home_growths[i, year]
-            market_rate = market_returns[i, year]
+            home_growths = rng.normal(home_mu, home_sigma, num_samples)
+            home_final_mean = np.mean(home_growths)
+            home_final_sigma = np.std(home_growths)
+            local_hv *= (1 + home_final_mean) # compounds the home growth
 
-            s *= (1 + salary_rate)
-            hv *= (1 + home_rate)
+            market_returns = rng.normal(inv_mu, inv_sigma, num_samples)
+            returns_final_mean = np.mean(market_returns)
+            returns_final_sigma = np.std(market_returns) # need an investment value
 
-            ira = ira * (1 + market_rate) + ira_contrib
-            k401 = k401 * (1 + market_rate) + s * contrib_401k_pct
-            taxable = taxable * (1 + market_rate) + max(0, s * (1 - lifestyle_spend_pct - tax_rate - contrib_401k_pct))
-
+            local_ira = local_ira * (1 + returns_final_mean) + ira_contrib
+            local_401k = (local_401k * (1 + returns_final_mean)) + (local_salary * contrib_401k_pct)
+            local_taxable = local_taxable * (1 + returns_final_mean) + max(0, local_salary * (1 - lifestyle_spend_pct - tax_rate - contrib_401k_pct))
             debt_payment = mb * mortgage_apr
             mb = max(0, mb - debt_payment)
+            spending = local_salary * lifestyle_spend_pct + (child_cost if year < child_years else 0)
+            # salary_rate = salary_growths[i, year] ------- we could do this with one salary growth array but this way there is more randomization (every growth has its separate simualtion)
+            # home_rate = home_growths[i, year]
+            # market_rate = market_returns[i, year]
+
+            # s *= (1 + salary_rate)
+            # hv *= (1 + home_rate)
+
+            # ira = ira * (1 + market_rate) + ira_contrib
+            # k401 = k401 * (1 + market_rate) + s * contrib_401k_pct
+            # taxable = taxable * (1 + market_rate) + max(0, s * (1 - lifestyle_spend_pct - tax_rate - contrib_401k_pct))
+
+            # debt_payment = mb * mortgage_apr
+            # mb = max(0, mb - debt_payment)
             
-            spending = s * lifestyle_spend_pct + (child_cost if year < child_years else 0)
+            # spending = s * lifestyle_spend_pct + (child_cost if year < child_years else 0)
 
-            W = hv - mb + ira + k401 + taxable - spending
-
+            # W = hv - mb + ira + k401 + taxable - spending
+        W = local_hv - mb + local_ira + local_k401 + local-taxable - spending
         networths.append(W)
 
     summary = {
