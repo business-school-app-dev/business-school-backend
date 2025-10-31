@@ -6,6 +6,7 @@ from flask import Blueprint
 from .routes.health import health_bp
 from .routes.auth import auth_bp
 from .routes.me import me_bp
+from .routes.simulations import simulation_bp
 # add others as they’re created:
 # from .routes.assets import assets_bp
 # from .routes.liabilities import liabilities_bp
@@ -19,4 +20,5 @@ def register_blueprints(app):
     app.register_blueprint(health_bp, url_prefix="/api/v1")
     app.register_blueprint(auth_bp, url_prefix="/api/v1")
     app.register_blueprint(me_bp, url_prefix="/api/v1")
+    app.register_blueprint(simulation_bp, url_prefix="/api/v1")
     # register others as you implement them
