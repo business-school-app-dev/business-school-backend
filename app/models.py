@@ -32,7 +32,7 @@ class User(Base):
         server_default=text("now()"),
     )
     
-    trophies: Mapped[int] = mapped_column(BigInteger)
+    trophies: Mapped[int] = mapped_column()
     retirement_age: Mapped[Optional[int]] = mapped_column()
     employment_age: Mapped[Optional[int]] = mapped_column()
 
