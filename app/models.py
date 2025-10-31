@@ -42,9 +42,8 @@ class User(Base):
 
     monthly_spending: Mapped[Optional[int]] = mapped_column(Integer)
 
-
-class Assets(Base):
-    __tablename__ = "assets"
+class FinStatements(Base):
+    ___tablename___ = "statements"
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.id'))
@@ -52,18 +51,10 @@ class Assets(Base):
     name: Mapped[str] = mapped_column(String[255])
     valuation: Mapped[int] = mapped_column(BigInteger)
     growth: Mapped[int] = mapped_column(Float)
+    term: Mapped[Optional[int]] = mapped_column(Integer)
 
-class Liabilities(Base):
-    __tablename__ = "liabilities"
+    liab_status: Mapped[bool] = mapped_column(Boolean)
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
-    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.id'))
-    asset_id: Mapped[Optional[int]] = mapped_column(BigInteger, ForeignKey('assets.id'))
-
-    name: Mapped[str] = mapped_column(String[255])
-    valuation: Mapped[int] = mapped_column(BigInteger)
-    term: Mapped[int] = mapped_column(Integer)
-    growth: Mapped[int] = mapped_column(Float)
 
 class Questions(Base):
     __tablename__ = "questions"
