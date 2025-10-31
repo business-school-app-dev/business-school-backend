@@ -10,7 +10,7 @@ from .routes.me import me_bp
 # from .routes.assets import assets_bp
 # from .routes.liabilities import liabilities_bp
 # from .routes.simulations import simulations_bp
-# from .routes.challenges import challenges_bp
+from .routes.challenges import challenges_bp
 # from .routes.courses import courses_bp
 # from .routes.advising import advising_bp
 
@@ -19,4 +19,5 @@ def register_blueprints(app):
     app.register_blueprint(health_bp, url_prefix="/api/v1")
     app.register_blueprint(auth_bp, url_prefix="/api/v1")
     app.register_blueprint(me_bp, url_prefix="/api/v1")
+    app.register_blueprint(challenges_bp, url_prefix="/api/v1")
     # register others as you implement them
