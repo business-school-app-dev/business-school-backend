@@ -61,7 +61,7 @@ class Questions(Base):
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
 
-    question_difficulty: Mapped[str] = mapped_column(String[1])
+    question_difficulty: Mapped[int] = mapped_column(Integer)
     question: Mapped[str] = mapped_column(String[255])
     question_choices: Mapped[JSON] = mapped_column(JSON)
 
