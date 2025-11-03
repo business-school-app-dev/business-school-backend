@@ -8,3 +8,5 @@ celery>=5.3
 redis>=5.0
 python-dotenv>=1.0
 loguru>=0.7
+numpy
+pandas
