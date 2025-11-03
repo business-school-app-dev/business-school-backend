@@ -10,7 +10,7 @@ from .routes.simulations import simulation_bp
 # add others as they’re created:
 # from .routes.assets import assets_bp
 # from .routes.liabilities import liabilities_bp
-# from .routes.simulations import simulations_bp
+from .routes.simulations import simulation_bp
 from .routes.challenges import challenges_bp
 # from .routes.courses import courses_bp
 # from .routes.advising import advising_bp
