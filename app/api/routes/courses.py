@@ -52,6 +52,9 @@ def build_prereq_filtered(course_id, filter_pattern, visited=None):
     course_name = response.get("name", "")
     if not prereq_text:
         return {"course": course_id, "name": course_name, "prereqs": []}
+    
+    description = response.get("description", "")
+    restriction = response.get("restrictions", "")
 
     all_prereq_courses = re.findall(r"[A-Z]{4}\d{3}", prereq_text)
     courses_to_build = [c for c in all_prereq_courses if re.match(filter_pattern, c)]
@@ -60,6 +63,8 @@ def build_prereq_filtered(course_id, filter_pattern, visited=None):
     return {
         "course": course_id,
         "name": course_name,
+        "description": description,
+        "restriction": restriction,
         "prereqs": prereq_list
     }
 
@@ -79,6 +84,10 @@ def build_prereq(course_id, visited=None):
 
     prereq_text = response.get("relationships", {}).get("prereqs")
     course_name = response.get("name", "")
+
+    description = response.get("description", "")
+    restriction = response.get("restrictions", "")
+
     if not prereq_text:
         return {"course": course_id, "name": course_name, "prereqs": []}
 
@@ -87,6 +96,8 @@ def build_prereq(course_id, visited=None):
     return {
         "course": course_id,
         "name": course_name,
+        "description": description,
+        "restriction": restriction,
         "prereqs": prereq_list
     }
 
@@ -117,6 +128,8 @@ def get_planTrim(course_id):
     filter_pattern = get_filter_pattern(course_id)
     tree = build_prereq_filtered(course_id, filter_pattern)
     return jsonify(tree)
+
+
 
 # ----------------------------
 # NEW FEATURE: Rule-based course recommender
@@ -161,7 +174,8 @@ def recommend_courses():
             "course_id": c["course_id"],
             "name": c["name"],
             "credits": c.get("credits"),
-            "description": c.get("description", "")
+            "description": c.get("description", ""), 
+            "restrictions": c.get("restrictions", "")
         }
         for c in recommended
     ]
