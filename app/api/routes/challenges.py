@@ -1,10 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Blueprint
 app = Flask(__name__)
 import random
 
-
-challenges_bp = Blueprint("challenges", __name__)
-
+challenges_bp = Blueprint("challenges", __name__, url_prefix="/challenges")
 
 
 questions = [
@@ -271,17 +269,18 @@ def get_difficulty():
     hard = []
 
     for question in questions:
-        if question["difficulty"] == 1:
+        if question["difficulty"] == 'e':
             easy.append(question)
     
     for question in questions:
-        if question["difficulty"] == 2:
+        if question["difficulty"] == 'm':
             medium.append(question)
 
     for question in questions:
-        if question["difficulty"] == 3:
+        if question["difficulty"] == 'h':
             hard.append(question)
     
+    print(easy)
     # easy = session.query(questions).filter_by(difficulty = 'e')
     # medium = session.query(questions).filter_by(difficulty = 'm')
     # hard = session.query(questions).filter_by(difficulty = 'h')
@@ -297,7 +296,7 @@ def get_difficulty():
     
     return selected_questions
 
-@app.route('/questions', methods=['GET'])
+@challenges_bp.route('/questions', methods=['GET'])
 def get_questions():
     daily_questions = get_difficulty()
 
@@ -318,7 +317,7 @@ def get_questions():
 
 # Maybe look into validating answers in the front end
 
-@app.route('/answers', methods=['POST'])
+@challenges_bp.route('/answers', methods=['POST'])
 def submit_answer():
     is_correct = False
     question_found = None
