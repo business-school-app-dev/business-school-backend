@@ -2,6 +2,11 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 import random
 
+
+challenges_bp = Blueprint("challenges", __name__)
+
+
+
 questions = [
     {
         "id": 0,
@@ -30,7 +35,8 @@ questions = [
     {
         "id": 2,
         "text": "What is a budget?",
-        "difficulty": 1,
+        "difficulty": 3,
+
         "options": [
             "A financial plan for income and expenses",
             "A type of savings account",
@@ -302,7 +308,6 @@ def get_questions():
             "text": question["text"],
             "difficulty": question["difficulty"],
             "options": question["options"],
-            "correct_answer": question["correct_answer"]
         })
     
     return jsonify({
