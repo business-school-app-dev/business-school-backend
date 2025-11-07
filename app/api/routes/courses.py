@@ -1,8 +1,8 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Blueprint
 import requests
 import re
 
-app = Flask(__name__)
+courses_bp = Blueprint('courses', __name__)
 
 UMD_API = "https://api.umd.io/v0/courses"
 
@@ -21,10 +21,6 @@ def get_course(course_id):
 # Helper: Build regex filter pattern for prereqs
 # ----------------------------
 def get_filter_pattern(course_id: str) -> str:
-    """
-    Creates a regex pattern that allows one level below the target course.
-    Example: BMGT3xx -> BMGT[23]\d{2}
-    """
     match = re.match(r"([A-Z]{4})(\d)x{2}", course_id, re.IGNORECASE)
     if not match:
         return r"[A-Z]{4}\d{3}"
@@ -52,6 +48,9 @@ def build_prereq_filtered(course_id, filter_pattern, visited=None):
     course_name = response.get("name", "")
     if not prereq_text:
         return {"course": course_id, "name": course_name, "prereqs": []}
+    
+    description = response.get("description", "")
+    restriction = response.get("restrictions", "")
 
     all_prereq_courses = re.findall(r"[A-Z]{4}\d{3}", prereq_text)
     courses_to_build = [c for c in all_prereq_courses if re.match(filter_pattern, c)]
@@ -60,6 +59,8 @@ def build_prereq_filtered(course_id, filter_pattern, visited=None):
     return {
         "course": course_id,
         "name": course_name,
+        "description": description,
+        "restriction": restriction,
         "prereqs": prereq_list
     }
 
@@ -79,6 +80,10 @@ def build_prereq(course_id, visited=None):
 
     prereq_text = response.get("relationships", {}).get("prereqs")
     course_name = response.get("name", "")
+
+    description = response.get("description", "")
+    restriction = response.get("restrictions", "")
+
     if not prereq_text:
         return {"course": course_id, "name": course_name, "prereqs": []}
 
@@ -87,13 +92,15 @@ def build_prereq(course_id, visited=None):
     return {
         "course": course_id,
         "name": course_name,
+        "description": description,
+        "restriction": restriction,
         "prereqs": prereq_list
     }
 
 # ----------------------------
 # Endpoint: Get all BMGT courses
 # ----------------------------
-@app.route("/courses/all")
+@courses_bp.route("/courses/all")
 def get_all_courses():
     r = requests.get(f"{UMD_API}?dept_id=BMGT")
     if r.status_code != 200:
@@ -103,7 +110,7 @@ def get_all_courses():
 # ----------------------------
 # Endpoint: Get full prereq plan
 # ----------------------------
-@app.route("/plan/<course_id>")
+@courses_bp.route("/plan/<course_id>")
 def get_plan(course_id):
     tree = build_prereq(course_id.upper())
     return jsonify(tree)
@@ -111,17 +118,19 @@ def get_plan(course_id):
 # ----------------------------
 # Endpoint: Get filtered prereq plan
 # ----------------------------
-@app.route("/planTrim/<course_id>")
+@courses_bp.route("/planTrim/<course_id>")
 def get_planTrim(course_id):
     course_id = course_id.upper()
     filter_pattern = get_filter_pattern(course_id)
     tree = build_prereq_filtered(course_id, filter_pattern)
     return jsonify(tree)
 
+
+
 # ----------------------------
 # NEW FEATURE: Rule-based course recommender
 # ----------------------------
-@app.route("/recommend", methods=["GET"])
+@courses_bp.route("/recommend", methods=["GET"])
 def recommend_courses():
     """
     Recommend UMD courses based on user's comfort level (1-3) and time commitment (credits).
@@ -161,7 +170,8 @@ def recommend_courses():
             "course_id": c["course_id"],
             "name": c["name"],
             "credits": c.get("credits"),
-            "description": c.get("description", "")
+            "description": c.get("description", ""), 
+            "restrictions": c.get("restrictions", "")
         }
         for c in recommended
     ]
@@ -176,7 +186,7 @@ def recommend_courses():
 # ----------------------------
 # Root route: API overview
 # ----------------------------
-@app.route("/")
+@courses_bp.route("/")
 def home():
     return jsonify({
         "message": "UMD Course Planner API",
@@ -191,5 +201,5 @@ def home():
 # ----------------------------
 # Run server
 # ----------------------------
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == "courses":
+    courses_bp.run(debug=True)
