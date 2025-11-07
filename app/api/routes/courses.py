@@ -134,18 +134,18 @@ def get_planTrim(course_id):
 def recommend_courses():
     """
     Recommend UMD courses based on user's comfort level (1-3) and time commitment (credits).
-    Example: /recommend?comfort=2&max_credits=3
+    Example: /recommend?comfort=1&max_credits=3
     """
-    comfort = int(request.args.get("comfort", 1))  # 1, 2, or 3
+    comfort = str(request.args.get("comfort", "beginner"))  # beginner, intermediate, advanced
     max_credits = int(request.args.get("max_credits", 3))  # max allowed credits
 
     # Map comfort to difficulty
     level_map = {
-        1: "1",  # easy
-        2: "2",  # moderate
-        3: "3"   # challenging
+        "beginner": "1",  # easy
+        "intermediate": "2",  # moderate
+        "advanced": "3"   # challenging
     }
-    level = level_map.get(comfort, "1")
+    level = level_map.get(comfort, "beginner")
 
     # Fetch all BMGT courses
     r = requests.get(f"{UMD_API}?dept_id=BMGT")
