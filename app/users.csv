@@ -1,0 +1,11 @@
+id,email,password_hash,username,name,role,created_at,trophies,retirement_age,employment_age,career_name,career_starting,career_growth,children,monthly_spending
+user1@example.com,hash1,user1,John Doe,user,2025-01-01 12:00:00,15,65,22,Engineer,22,1.05,2,2000
+user2@example.com,hash2,user2,Jane Smith,user,2025-01-02 12:00:00,25,67,23,Teacher,23,1.03,1,1800
+user3@example.com,hash3,user3,Bob Johnson,user,2025-01-03 12:00:00,5,60,21,Artist,21,1.02,0,1500
+user4@example.com,hash4,user4,Alice Williams,user,2025-01-04 12:00:00,30,70,25,Doctor,25,1.08,3,2500
+user5@example.com,hash5,user5,Charlie Brown,user,2025-01-05 12:00:00,10,65,22,Lawyer,22,1.04,2,2200
+user6@example.com,hash6,user6,Eve Davis,user,2025-01-06 12:00:00,18,68,24,Engineer,24,1.05,1,2100
+user7@example.com,hash7,user7,Frank Miller,user,2025-01-07 12:00:00,8,62,21,Teacher,21,1.03,0,1700
+user8@example.com,hash8,user8,Grace Wilson,user,2025-01-08 12:00:00,22,65,23,Artist,23,1.02,1,1900
+user9@example.com,hash9,user9,Hank Moore,user,2025-01-09 12:00:00,12,67,24,Doctor,24,1.06,2,2300
+user10@example.com,hash10,user10,Ivy Taylor,user,2025-01-10 12:00:00,28,70,25,Lawyer,25,1.07,2,2400
