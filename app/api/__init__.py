@@ -22,5 +22,5 @@ def register_blueprints(app):
     app.register_blueprint(me_bp, url_prefix="/api/v1")
     app.register_blueprint(simulation_bp, url_prefix="/api/v1")
     app.register_blueprint(courses_bp, url_prefix="/api/v1")
-    # register others as you implement them
     app.register_blueprint(challenges_bp, url_prefix="/api/v1")
+    # register others as you implement them
