@@ -1,0 +1,22 @@
+id,question_difficulty,question,question_choices,correct_answer
+0,1,What is financial literacy?,"[""The ability to understand and use financial skills"", ""The study of literature about finance"", ""A type of bank account"", ""A financial certification program""]",0
+1,1,What does APR stand for in finance?,"[""Annual Payment Rate"", ""Annual Percentage Rate"", ""Average Price Ratio"", ""Automatic Payment Return""]",1
+2,3,What is a budget?,"[""A financial plan for income and expenses"", ""A type of savings account"", ""A credit card limit"", ""A loan repayment schedule""]",0
+3,2,What is compound interest?,"[""Interest calculated only on the principal"", ""Interest that decreases over time"", ""Interest calculated on principal plus accumulated interest"", ""A type of loan penalty""]",2
+4,1,What is a credit score used for?,"[""Measuring how much debt you have"", ""Evaluating creditworthiness for loans and credit"", ""Calculating your annual income"", ""Determining your tax bracket""]",1
+5,2,What is diversification in investing?,"[""Investing all money in one stock"", ""Spreading investments across different assets"", ""Only investing in foreign markets"", ""Selling all investments at once""]",1
+6,1,What is an emergency fund?,"[""Money saved for unexpected expenses"", ""A government assistance program"", ""A type of insurance policy"", ""A credit card for emergencies only""]",0
+7,1,What does it mean to live paycheck to paycheck?,"[""Getting paid twice a month"", ""Having no savings and spending all income before the next paycheck"", ""Receiving payments via check only"", ""Working two jobs simultaneously""]",1
+8,2,What is a 401(k)?,"[""A type of credit card"", ""A retirement savings plan sponsored by employers"", ""A government bond"", ""A student loan program""]",1
+9,2,What is inflation?,"[""The decrease in prices over time"", ""The increase in general price levels over time"", ""A type of investment return"", ""A banking fee""]",1
+10,1,What is the difference between a debit and credit card?,"[""No difference, they work the same way"", ""Debit uses your own money, credit borrows from the bank"", ""Credit cards are only for businesses"", ""Debit cards have higher interest rates""]",1
+11,2,What is equity in a home?,"[""The monthly mortgage payment"", ""The difference between home value and what you owe"", ""The interest rate on your mortgage"", ""The property tax amount""]",1
+12,1,What is a stock?,"[""A type of savings account"", ""Ownership share in a company"", ""A government issued bond"", ""A loan to a corporation""]",1
+13,2,What does ROI stand for?,"[""Rate of Income"", ""Return on Investment"", ""Risk of Inflation"", ""Revenue Operating Index""]",1
+14,2,What is a mutual fund?,"[""A bank savings account"", ""A pooled investment vehicle managed by professionals"", ""A type of insurance policy"", ""A personal loan program""]",1
+15,2,What is net worth?,"[""Your annual salary"", ""Total assets minus total liabilities"", ""The value of your home"", ""Your monthly income after taxes""]",1
+16,2,What is a tax deduction?,"[""A penalty for not paying taxes"", ""An expense that reduces taxable income"", ""A type of investment account"", ""A government refund program""]",1
+17,2,What does FICO score measure?,"[""Your income level"", ""Your credit risk and payment history"", ""Your investment portfolio size"", ""Your net worth""]",1
+18,3,What is liquidity in finance?,"[""How much debt you have"", ""How easily an asset can be converted to cash"", ""The interest rate on savings"", ""The total value of your investments""]",1
+19,3,What is dollar-cost averaging?,"[""Investing all money at once"", ""Investing fixed amounts at regular intervals"", ""Only buying stocks when prices are low"", ""Selling investments monthly""]",1
+20,2,What is the 50/30/20 budget rule?,"[""50% savings, 30% needs, 20% wants"", ""50% needs, 30% wants, 20% savings"", ""50% investments, 30% expenses, 20% cash"", ""50% rent, 30% food, 20% utilities""]",1

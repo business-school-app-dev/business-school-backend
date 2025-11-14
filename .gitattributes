@@ -1,0 +1,14 @@
+# Always use LF in code / config files shared across OSes
+*.py     text eol=lf
+*.ini    text eol=lf
+*.sh     text eol=lf
+*.mako   text eol=lf
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.sql    text eol=lf
+
+# Let Windows-y stuff be CRLF if it really wants (usually not relevant here)
+*.bat    text eol=crlf
+*.ps1    text eol=crlf

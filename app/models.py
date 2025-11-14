@@ -50,7 +50,7 @@ class FinStatements(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.id'))
 
-    name: Mapped[str] = mapped_column(String[255])
+    name: Mapped[str] = mapped_column(String(255))
     valuation: Mapped[int] = mapped_column(BigInteger)
     growth: Mapped[float] = mapped_column()
     term: Mapped[Optional[int]] = mapped_column()
@@ -64,7 +64,7 @@ class Questions(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
 
     question_difficulty: Mapped[int] = mapped_column()
-    question: Mapped[str] = mapped_column(String[255])
+    question: Mapped[str] = mapped_column(String(255))
     question_choices: Mapped[JSON] = mapped_column(JSON)
 
     correct_answer: Mapped[int] = mapped_column()
@@ -74,6 +74,6 @@ class Jobs(Base):
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
 
-    name: Mapped[str] = mapped_column(String[64])
+    name: Mapped[str] = mapped_column(String(64))
     starting: Mapped[int] = mapped_column()
     growth: Mapped[float] = mapped_column()

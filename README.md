@@ -136,12 +136,19 @@ Set your Flask environment variables and start the server:
 Windows PowerShell:
 $env:FLASK_APP="wsgi.py"
 $env:FLASK_ENV="development"
-flask run
+
+
+
+flask run --debug
 
 macOS/Linux:
 export FLASK_APP="wsgi.py"
+
 export FLASK_ENV="development"
-flask run
+
+
+
+flask run --debug
 
 
 Flask should start at:
