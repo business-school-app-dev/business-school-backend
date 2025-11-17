@@ -134,48 +134,41 @@ def get_planTrim(course_id):
 def recommend_courses():
     """
     Recommend UMD courses based on user's comfort level (1-3) and time commitment (credits).
-    Example: /recommend?comfort=2&max_credits=3
+    Example: /recommend?comfort=1&max_credits=3
     """
-    comfort = int(request.args.get("comfort", 1))  # 1, 2, or 3
+    comfort = str(request.args.get("comfort", "beginner"))  # beginner, intermediate, advanced
     max_credits = int(request.args.get("max_credits", 3))  # max allowed credits
-
     # Map comfort to difficulty
     level_map = {
-        1: "1",  # easy
-        2: "2",  # moderate
-        3: "3"   # challenging
+        "beginner": "1",  # easy
+        "intermediate": "2",  # moderate
+        "advanced": "3"   # challenging
     }
-    level = level_map.get(comfort, "1")
-
+    level = level_map.get(comfort, "beginner")
     # Fetch all BMGT courses
     r = requests.get(f"{UMD_API}?dept_id=BMGT")
     if r.status_code != 200:
         return jsonify({"error": "Failed to fetch courses"}), 500
-
     all_courses = r.json()
-
     # Filter by level and credits
     recommended = [
         c for c in all_courses
         if re.match(rf"BMGT{level}\d{{2}}", c["course_id"])
         and int(c.get("credits", 0)) <= max_credits
     ]
-
     if not recommended:
         return jsonify({"message": "No suitable courses found."}), 404
-
     # Prepare clean response
     results = [
         {
             "course_id": c["course_id"],
             "name": c["name"],
             "credits": c.get("credits"),
-            "description": c.get("description", ""), 
+            "description": c.get("description", ""),
             "restrictions": c.get("restrictions", "")
         }
         for c in recommended
     ]
-
     return jsonify({
         "comfort_level": comfort,
         "difficulty": f"{level}xx",
