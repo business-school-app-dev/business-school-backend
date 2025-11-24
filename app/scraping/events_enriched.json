@@ -1,174 +1,12 @@
 [
   {
-    "title": "Tech Management Info Session",
-    "date": "Monday, November 10, 2025",
-    "time": "5:00 PM EST",
-    "description": "Join us to learn more about Maryland Smith's unique Graduate Program in Technology Management .",
-    "url": "https://www.rhsmith.umd.edu/events/tech-management-info-session-27",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "3d40b608-22ba-51ae-856a-ac8eaa3a0953"
-  },
-  {
-    "title": "Dean’s Distinguished Speaker Series",
-    "date": "Tuesday, November 11, 2025",
-    "time": "6:00 PM EST",
-    "description": "Upcoming in the Dean’s Distinguished Speaker Series, Dan Ives, managing partner and senior equity research analyst at Wedbush Securities and University of Maryland MBA alumnus, will discuss trends in the technology sector, including electric vehicles and disruptive technologies.",
-    "url": "https://www.rhsmith.umd.edu/events/deans-distinguished-speaker-series",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "0620493c-054e-52ae-a123-85dddaafa21c"
-  },
-  {
-    "title": "Executive MBA Info Session",
-    "date": "Tuesday, November 11, 2025",
-    "time": "6:30 PM EST",
-    "description": "Join us for a virtual information session to learn how Smith’s Executive MBA program—consistently ranked among the best in the nation—can accelerate your leadership journey.",
-    "url": "https://www.rhsmith.umd.edu/events/executive-mba-info-session-32",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "13c04cf0-0615-5aab-84cc-55a00bad3535"
-  },
-  {
-    "title": "MS Drop In Consultations",
-    "date": "Wednesday, November 12, 2025",
-    "time": "8:30 AM EST",
-    "description": "Join our drop-in consultation hours for Master’s programs.",
-    "url": "https://www.rhsmith.umd.edu/events/ms-drop-consultations-1",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "f92bc48c-54f5-50cf-b060-f9db87539a13"
-  },
-  {
-    "title": "OMiM Virtual Information Session",
-    "date": "Wednesday, November 12, 2025",
-    "time": "12:30 PM EST",
-    "description": "Discover how Smith’s online Master of Science in management studies can help you take the next step in your professional journey.",
-    "url": "https://www.rhsmith.umd.edu/events/omim-virtual-information-session-17",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "b10c6d3d-9696-561d-9a37-8e5b1b9ae303"
-  },
-  {
-    "title": "Doctor of Business Administration Info Session",
-    "date": "Wednesday, November 12, 2025",
-    "time": "6:30 PM EST",
-    "description": "Ready to level up your career, business expertise and professional leadership? Join us for a virtual information session to explore how the UMD Smith DBA program can help you advance your expertise as a business leader and researcher.",
-    "url": "https://www.rhsmith.umd.edu/events/doctor-business-administration-info-session-10",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "b8ce0530-8f83-5495-99a9-67661c22bf17"
-  },
-  {
-    "title": "Flex & Online MBA Virtual Info Session",
-    "date": "Friday, November 14, 2025",
-    "time": "6:30 PM EST",
-    "description": "Explore the UMD Smith Part-Time Flex MBA and Online MBA programs in this virtual webinar.",
-    "url": "https://www.rhsmith.umd.edu/events/flex-online-mba-virtual-info-session-20",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "4dba4cab-9760-5d84-a828-83d5b7c91ba3"
-  },
-  {
-    "title": "Global Strategy Case Workshop",
-    "date": "Monday, November 17, 2025",
-    "time": "12:00 PM EST",
-    "description": "In collaboration with logistics, business and public policy professor Jon Crocker, this hands-on workshop will teach students how to strategize, analyze and best present global business cases in a competition environment.",
-    "url": "https://www.rhsmith.umd.edu/events/global-strategy-case-workshop",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "a3b4f4d2-6301-500b-9383-941889654b1c"
-  },
-  {
-    "title": "Meet the Center at the Cybersecurity Association of Maryland Summit",
-    "date": "Tuesday, November 18, 2025",
-    "time": "8:30 AM EST",
-    "description": "Meet Rebecca Bellinger, executive director of the Center for Global Business, at the 2025 Business Growth and Innovation Summit. The event connects and inspires C-suite executives through candid conversation and actionable advice.",
-    "url": "https://www.rhsmith.umd.edu/events/meet-center-cybersecurity-association-maryland-summit",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "5e8bbb88-85cf-5f57-b382-5e17e6168740"
-  },
-  {
-    "title": "Careers Crossing Borders",
-    "date": "Tuesday, November 18, 2025",
-    "time": "5:00 PM EST",
-    "description": "In collaboration with the Smith School’s Fashion Business Association and International Business Association, the third event of the Careers Crossing Borders series this year will showcase global fashion professionals who will share their career journeys, essential skills for success, and perspec",
-    "url": "https://www.rhsmith.umd.edu/events/careers-crossing-borders-1",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "bbfc64c4-9d34-5c56-81fb-30566662b967"
-  },
-  {
-    "title": "8th Global Conference on Creating Value",
-    "date": "Wednesday, November 19, 2025",
-    "time": "3:00 AM EST",
-    "description": "November 19-20, 2025",
-    "url": "https://www.rhsmith.umd.edu/events/8th-global-conference-creating-value",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "e804d34b-40f5-5b47-9fa1-8e3c76b04103"
-  },
-  {
-    "title": "Full-Time MBA Virtual Info Session",
-    "date": "Wednesday, November 19, 2025",
-    "time": "8:30 AM EST",
-    "description": "Thinking about your next big career move? Join us for an inside look at the UMD Smith Full-Time MBA program.",
-    "url": "https://www.rhsmith.umd.edu/events/full-time-mba-virtual-info-session-22",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "1d62a8c5-6892-58ad-8f14-34dfa37c9202"
-  },
-  {
-    "title": "U.S. Business Needs Survey: Brown Bag Discussion",
-    "date": "Wednesday, November 19, 2025",
-    "time": "12:00 PM EST",
-    "description": "Join Kislaya Prasad, academic director of the Center for Global Business and research professor at the Smith School of Business, for a discussion on the outcomes of the 2024 U.S.",
-    "url": "https://www.rhsmith.umd.edu/events/us-business-needs-survey-brown-bag-discussion",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "2df600af-7ef6-5a75-913e-b4908254aa92"
-  },
-  {
-    "title": "Meet the OMSBA Academic Director",
-    "date": "Wednesday, November 19, 2025",
-    "time": "12:30 PM EST",
-    "description": "Join Academic Director Bharti Motwani for an insightful discussion about the Online MS in Business Analytics program. Don’t miss this chance to gain valuable insights into the program and connect with our admissions team.",
-    "url": "https://www.rhsmith.umd.edu/events/meet-omsba-academic-director",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "a121359e-e013-5516-b314-aeb47608d696"
-  },
-  {
-    "title": "Global Summer Internship Info Session",
-    "date": "Wednesday, November 19, 2025",
-    "time": "4:00 PM EST",
-    "description": "Learn about the Summer Global Internship program. Earn six credits while interning abroad this summer.",
-    "url": "https://www.rhsmith.umd.edu/events/global-summer-internship-info-session-1",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "5b57b37d-7d70-56d6-b244-3420a653fbd5"
-  },
-  {
-    "title": "International Business Student Organization (IBSO) IB Trek",
-    "date": "Thursday, November 20, 2025",
-    "time": "8:00 AM EST",
-    "description": "In collaboration with IBSO, visit companies with global operations and learn about international business concepts while exploring the Baltimore area. The trek will depart from and return to Van Munching Hall. Open to undergraduate and graduate students.",
-    "url": "https://www.rhsmith.umd.edu/events/international-business-student-organization-ibso-ib-trek",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "43f4c9e2-e444-5705-990b-9e3c6bc9b3fb"
-  },
-  {
-    "title": "Mock Class: Exploring Marketing Data Science",
-    "date": "Thursday, November 20, 2025",
-    "time": "9:00 AM EST",
-    "description": "Join us for a virtual mock class led by Daniel Minh McCarthy, associate professor of marketing, where you’ll explore the fundamentals of marketing data science.",
-    "url": "https://www.rhsmith.umd.edu/events/mock-class-exploring-marketing-data-science",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "c2d272cb-aaed-5d4c-95d9-fbd64b4603b4"
-  },
-  {
-    "title": "BAM! – Why Exporting Is Great for Your Company",
-    "date": "Friday, November 21, 2025",
-    "time": "12:00 PM EST",
-    "description": "Join Rebecca Bellinger, executive director of the Center for Global Business, and partners of the MAPIT Alliance during Business, Advocacy, Mentorship (BAM!), an event of the Maryland Hispanic Chamber of Commerce.",
-    "url": "https://www.rhsmith.umd.edu/events/bam-why-exporting-great-your-company",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "feea8cbf-01d0-53b1-95f1-1402454605ce"
-  },
-  {
-    "title": "Undergraduate Program at Shady Grove Information Session",
-    "date": "Friday, November 21, 2025",
-    "time": "12:30 PM EST",
-    "description": "Come learn more about admission to the Smith undergraduate program at the Universities at Shady Grove! You'll meet academic advisors and learn more about the programs, transfer process, and student experience at the Shady Grove campus. This session will be held virtually every other Friday.",
-    "url": "https://www.rhsmith.umd.edu/events/undergraduate-program-shady-grove-information-session",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
-    "id": "0c592a6b-6b64-550f-99c8-7b6373980ddb"
+    "title": "Plus 1 Week",
+    "date": "Monday, December 1, 2025",
+    "time": "9:30 AM EST",
+    "description": "Join us for Plus 1 Week to explore how you can start your master’s degree while still an undergraduate—and complete it in just one additional year.",
+    "url": "https://www.rhsmith.umd.edu/events/plus-1-week",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
+    "id": "cb441435-d533-5780-9383-dde78837178a"
   },
   {
     "title": "Research in Industry Panel",
@@ -176,8 +14,26 @@
     "time": "5:30 PM EST",
     "description": "How is research used in industry? Come learn from those who have this experience and explore potential career paths.",
     "url": "https://www.rhsmith.umd.edu/events/research-industry-panel",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "2a7551cc-371b-5cee-8938-501abcb5b3b5"
+  },
+  {
+    "title": "Inside the MQF: Is It the Right Fit for Your Goals?",
+    "date": "Tuesday, December 2, 2025",
+    "time": "1:00 PM EST",
+    "description": "You’ve mastered complex concepts, tackled demanding problem sets, and are building strong quantitative skills—so what comes next?",
+    "url": "https://www.rhsmith.umd.edu/events/inside-mqf-it-right-fit-your-goals",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
+    "id": "89ca7c5c-4595-5f73-9286-9e78205e6e00"
+  },
+  {
+    "title": "Inside the MQF: Is It the Right Fit for Your Goals? (In-person)",
+    "date": "Tuesday, December 2, 2025",
+    "time": "1:00 PM EST",
+    "description": "You’ve mastered complex concepts, tackled demanding problem sets, and are building strong quantitative skills—so what comes next?",
+    "url": "https://www.rhsmith.umd.edu/events/inside-mqf-it-right-fit-your-goals-person",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
+    "id": "98494915-063d-54fe-9462-70bd5981d572"
   },
   {
     "title": "OMiM Virtual Information Session",
@@ -185,7 +41,7 @@
     "time": "6:30 PM EST",
     "description": "Discover how Smith’s Online Master of Science in Management Studies can help you take the next step in your professional journey.",
     "url": "https://www.rhsmith.umd.edu/events/omim-virtual-information-session-18",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "b5c37fef-e910-5942-acd5-4710edc86c5e"
   },
   {
@@ -194,8 +50,17 @@
     "time": "12:30 PM EST",
     "description": "Discover Smith’s Top-Ranked Online MS in Business Analytics program!",
     "url": "https://www.rhsmith.umd.edu/events/online-ms-business-analytics-information-session-28",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "5a2dc194-fa42-59c4-9f4a-cd31595947aa"
+  },
+  {
+    "title": "Grad School or Work Force, What's Next for Me?",
+    "date": "Thursday, December 4, 2025",
+    "time": "3:00 PM EST",
+    "description": "Hey Seniors! 🎓",
+    "url": "https://www.rhsmith.umd.edu/events/grad-school-or-work-force-whats-next-me",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
+    "id": "b62b9339-3eae-589a-86e4-18e1f4088296"
   },
   {
     "title": "Full-Time MBA Virtual Info Session",
@@ -203,7 +68,7 @@
     "time": "9:00 AM EST",
     "description": "Thinking about your next big career move? Join us for an inside look at the UMD Smith Full-Time MBA program.",
     "url": "https://www.rhsmith.umd.edu/events/full-time-mba-virtual-info-session-24",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "c98e95c0-cd06-54f0-8edd-0b4aadc4b34f"
   },
   {
@@ -212,7 +77,7 @@
     "time": "12:30 PM EST",
     "description": "Come learn more about admission to the Smith undergraduate program at the Universities at Shady Grove! You'll meet academic advisors and learn more about the programs, transfer process, and student experience at the Shady Grove campus. This session will be held virtually every other Friday.",
     "url": "https://www.rhsmith.umd.edu/events/undergraduate-program-shady-grove-information-session",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "0c592a6b-6b64-550f-99c8-7b6373980ddb"
   },
   {
@@ -221,7 +86,7 @@
     "time": "12:30 PM EST",
     "description": "Join us for a virtual information session to learn how Smith’s Executive MBA program—consistently ranked among the best in the nation—can accelerate your leadership journey.",
     "url": "https://www.rhsmith.umd.edu/events/executive-mba-info-session-33",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "8bb2fb98-ccb3-5572-a88c-ce0fe55df8c1"
   },
   {
@@ -230,7 +95,7 @@
     "time": "8:30 AM EST",
     "description": "Connect with the Office of Admissions for an overview of all the Business Master’s programs offered at the Robert H. Smith School of Business.",
     "url": "https://www.rhsmith.umd.edu/events/which-business-masters-program-right-me-15",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "9b2e05ec-18cc-52de-b7bc-0bcd96f44145"
   },
   {
@@ -239,7 +104,7 @@
     "time": "8:30 AM EST",
     "description": "Mystified by LinkedIn? Wondering what employers really want to see on your resume? Office of Career Services (OCS) can help! Smith Career Coach Seth Travers will walk you through the coaching process and how to effectively target your post-graduation employment goals.",
     "url": "https://www.rhsmith.umd.edu/events/masters-students-meet-office-career-services-1",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "619e5a19-8dc3-58c7-9a79-a6cc61148007"
   },
   {
@@ -248,7 +113,7 @@
     "time": "10:00 AM EST",
     "description": "Join our drop-in consultation hours for our in-person Full-Time MBA program.",
     "url": "https://www.rhsmith.umd.edu/events/full-time-mba-drop-consultations",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "354e9a14-2770-54fe-bb7f-6da38855346d"
   },
   {
@@ -257,7 +122,7 @@
     "time": "12:00 PM EST",
     "description": "Ready to level up your career, business expertise and professional leadership? Join us for a virtual information session to explore how the UMD Smith DBA program can help you advance your expertise as a business leader and researcher.",
     "url": "https://www.rhsmith.umd.edu/events/doctor-business-administration-info-session-11",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "e1eb9d1d-e0bb-5dc5-871a-ceb56054f730"
   },
   {
@@ -266,7 +131,7 @@
     "time": "8:30 AM EST",
     "description": "Attend your first class at UMD Smith! Join us for a virtual mock class session in the MS Supply Chain Management (MSSCM) program about the role of Supply Chain Management in Driving Competitive Advantage. This mock class will be taught by Professor Humberto Coronado.",
     "url": "https://www.rhsmith.umd.edu/events/msscm-mock-class-role-supply-chain-management",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "fb906069-f85b-5aae-9c1b-9836ec7589d7"
   },
   {
@@ -275,7 +140,7 @@
     "time": "12:00 PM EST",
     "description": "Thinking about your next big career move? Join us for an inside look at the UMD Smith Full-Time MBA program.",
     "url": "https://www.rhsmith.umd.edu/events/full-time-mba-virtual-info-session-23",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "c271eca0-c2b8-5009-83e5-cc24a94a454a"
   },
   {
@@ -284,7 +149,7 @@
     "time": "12:00 PM EST",
     "description": "Explore the UMD Smith Part-Time Flex MBA and Online MBA programs in this virtual webinar. Learn how each option is designed to provide the rigor of a Smith MBA with the flexibility you need to balance work, life, and school.",
     "url": "https://www.rhsmith.umd.edu/events/flex-online-mba-virtual-info-session-21",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "a1080406-1fee-5513-8a66-49df70d89926"
   },
   {
@@ -293,7 +158,7 @@
     "time": "5:00 PM EST",
     "description": "Join the Center for Global Business and Erik Peterson, managing director of Kearney’s Global Business Policy Council, for a discussion on Kearney’s latest report, World in Flux: Global Wildcards 2026–2031 , as part of the Distinguished Speakers in International Business Series.",
     "url": "https://www.rhsmith.umd.edu/events/world-flux-global-wildcards-2026-2031",
-    "time_updated": "2025-11-10T01:54:22.034367+00:00",
+    "time_updated": "2025-11-24T02:42:42.257804+00:00",
     "id": "c8b8c0d5-d2e3-5aed-b667-25c4933f60c0"
   }
 ]

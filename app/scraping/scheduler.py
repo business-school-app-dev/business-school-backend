@@ -78,11 +78,18 @@ def run_once():
     try:
         run_scraper()
         enrich_json()
-        print("Job complete.")
+
+        print("▶ Ingesting events into Postgres...")
+        cmd = [sys.executable, "ingest_events.py"]
+        subprocess.run(cmd, check=True)
+        
+        print("Ingestion complete.")
+
+        print("Job complete (scrape + enrich + ingest).")
     except subprocess.CalledProcessError as e:
-        print(f"Scraper failed (exit code {e.returncode}).")
+        print(f"Scraper or ingest failed (exit code {e.returncode}).")
     except Exception as e:
-        print(f"Enrichment failed: {e}")
+        print(f"Enrichment or ingestion failed: {e}")
 
 
 def main():

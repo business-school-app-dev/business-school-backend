@@ -1,6 +1,12 @@
+import sys
+from pathlib import Path
+
+# Ensure the project root is on sys.path so `from app import create_app` works
+ROOT_DIR = Path(__file__).resolve().parents[2]
+sys.path.append(str(ROOT_DIR))
+
 import json
 import uuid
-from pathlib import Path
 from datetime import datetime
 
 # DEBUG prints to know if imports succeed
