@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date as date_type
 from typing import Optional
 import uuid
 
@@ -92,7 +92,7 @@ class Event(Base):
     )
 
     title: Mapped[str] = mapped_column(String(255), nullable=False)
-    date: Mapped[date] = mapped_column(Date, nullable=False)
+    date: Mapped[date_type] = mapped_column(Date, nullable=False)
     time: Mapped[Optional[str]] = mapped_column(String(64))
     description: Mapped[Optional[str]] = mapped_column(Text)
     url: Mapped[str] = mapped_column(String(500), nullable=False)
