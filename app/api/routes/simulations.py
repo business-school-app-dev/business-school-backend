@@ -8,6 +8,38 @@ simulation_bp = Blueprint('simulation', __name__)
 
 #from .schema import UserInfo, Asset, Liability
 
+def get_tax_value(locations_df, state, salary):
+    if (state == None):
+        state_name = "United States overall"
+    else:
+        state_name = state
+
+    # obtains the tax brackets for the users location and gets rid of any brakets which the user does not quaify for
+    brackets = locations_df[locations_df["State"] == state_name].copy()
+    brackets["Income range"] = pd.to_numeric(brackets["Income range"], errors="coerce")
+    eligible_brackets = brackets[brackets["Income range"] <= salary]
+    
+    total_tax = 0
+    remaining_salary = salary
+    # starting at the highest bracket eligible, goes through all of the brackets compounding the correct tax on the taxable income in that bracket
+    for i in reversed(range(len(eligible_brackets))):
+        lower_bound = eligible_brackets.iloc[i]["Income range"]
+        rate = eligible_brackets.iloc[i]["tax rate"]
+        if (remaining_salary > lower_bound):
+            taxable_amount = remaining_salary - lower_bound
+            total_tax += taxable_amount * rate
+            remaining = lower_bound
+    return total_tax
+
+# gets a yearly home payment based on the principal 
+def get_home_payment(principal):
+    term_years = 30
+    annual_rate = 0.05
+    yearly_payment_num = annual_rate * ((1 + annual_rate) ** term_years)
+    yearly_payment_denom = ((1 + annual_rate) ** term_years) - 1
+    yearly_payment = principal * (yearly_payment_num / yearly_payment_denom)
+
+
 @simulation_bp.route("/simulation/run", methods=["POST"]) 
 def run_simulation():
     '''
@@ -15,92 +47,125 @@ def run_simulation():
     input data from the sliders, returning raw data for frontend to then
     plot.
     '''
-
     # Extracting all the data from the csv.
+    # data will be in the following form: 
+    # {
+    #     "job_id" : career_id              (if id data is not sent, then there would be a category and job field)
+    #     "location" : location,
+    #     "num_children" : num_children
+     #    "spending" : eager/conservative
+    # }
     data = request.get_json()
-    current_age = data.get("age")
-    csv_path = os.path.join(current_app.root_path, "Washington__D_C__Software_Engineer_Use_Cases__5_rows_ (1).csv")
-    df = pd.read_csv(csv_path)
-    row = df[df["current_age"] == current_age].iloc[0].to_dict() # finds the row with the age (in our case from the params)
-    risk_profile = data.get("risk") # low, medium, high
 
-    salary = row["starting_salary"]
-    salary_mu = row["salary_growth_mu"]
-    salary_sigma = row["salary_growth_sigma"] #found a distribution that i can run over (will assume growth is the same)
+    # extracting input fields
+    career_id = data.get("career_id")
+    location = data.get("location")
+    num_children = data.get("num_children")
+    spending_type = data.get("spending")
 
-    lifestyle_spend_pct = row["lifestyle_spend_pct"] 
-    tax_rate = row["effective_tax_rate"]
+    # defining paths to the parameter tables
+    salaries_path = os.path.join(current_app.root_path, "salary_table.csv")
+    home_and_child_path = os.path.join(current_app.root_path, "State-Specific Home Data & Child Data - Sheet1.csv")
+    home_and_rental_path = os.path.join(current_app.root_path, "Home Value & Rent Value Table - Sheet1.csv")
+    locations_path = os.path.join(current_app.root_path, "locations_table.csv")
 
-    home_value = row["home_value"]
-    home_mu = row["home_growth_mu"]
-    home_sigma = row["home_growth_sigma"]  # same thing with home (assume distribution is the same)
+    # reading data from the csvs 
+    salary_table = pd.read_csv(salaries_path)
+    locations_table = pd.read_csv(locations_path)
+    home_and_rental_table = pd.read_csv(home_and_rental_path)
+    home_and_child_table = pd.read_csv(home_and_child_path)
 
-    mortgage_balance = row["mortgage_balance"] 
-    mortgage_apr = row["mortgage_apr"]
+    # extracting relevant salary information
+    salary_row = salary_table[salary_table["Career_ID"] == career_id] # extracts the row with the matching career_id
+    starting_salary = float(salary_row["Starting Salary"].iloc[0])
+    salary_mu = float(salary_row["Salary_growth_mean"].iloc[0])
+    salary_sigma = float(salary_row["salary_growth_sd"] .iloc[0])
 
-    balance_401k = row["balance_401k"]
-    balance_ira = row["balance_ira"]
-    balance_taxable = row["balance_taxable"]
+    # extracting relavant location information and adjusts the starting salary based on location
+    locations_df = locations_table[locations_table["State"] == location]
+    starting_salary *= float(locations_df["inc-nat ratio"].iloc[0])
 
-    ira_contrib = row["annual_ira_contrib"]
-    contrib_401k_pct = row["annual_401k_contrib_pct"]
+    # extracting relevant household/rent/child information
+    home_and_child_df = home_and_child_table[home_and_child_table["State"] == location]
 
-    child_cost = row["annual_children_cost"]
-    child_years = row["children_years"]
-    
-    # For the data that provides a mean and stdev, we're gonna run multiple samples of it to simulate variance and chance.
-    # want to run the simulation for salary growth once then hold that value 
     num_samples = 10000
-    years = 10
+    years = 20
     rng = np.random.default_rng(seed=42) # creates a generator
 
-    home_growths = rng.normal(home_mu, home_sigma, (num_samples, years))
-    home_final_mean = np.mean(home_growths)
-    home_final_sigma = np.std(home_growths)
-
-    investment_risk = { # what do the numbers here represent?
-        "low" : [0.04, 0.07],
-        "medium" : [0.06, 0.12],
-        "high" : [0.08, 0.18],
-    }
-    
-    inv_mu = investment_risk.get(risk_profile)[0]
-    inv_sigma = investment_risk.get(risk_profile)[1]
-    market_returns = rng.normal(inv_mu, inv_sigma, (num_samples, years))
     networths = []
     rng = np.random.default_rng(seed=42)
     for i in range(num_samples):
-        local_salary = salary
-        local_hv = home_value
-        mb = mortgage_balance
-        local_ira = balance_ira
-        local_401k = balance_401k
-        local_taxable = balance_taxable
-        # runs a simulation on salary growth - has a local array and takes the mean growth
-        # compounds that to the salary
-        for year in range(years): # repeats once for each year 
-            salary_growths = rng.normal(salary_mu, salary_sigma, num_samples) # this is where the monte carlo takes place
+        local_salary = starting_salary
+        total_cash = 0
+
+        bought_a_house = False
+        home_value = 0
+        principal = 0
+        
+        annual_rate = 0.05
+        loan_term_years = 30
+        annual_payment = 0
+
+        mortgage_balance = 0
+        principal_paid = 0
+        effective_payment = 0
+
+        rent_or_mortgage_payment = 0
+        
+        for year in range(years): 
+            # computes and adds salary growth
+            salary_growths = rng.normal(salary_mu, salary_sigma, 100) 
             salary_final_mean = np.mean(salary_growths)
             salary_final_sigma = np.std(salary_growths)
-            local_salary *= (1 + salary_final_mean) # compounds the salary
+            local_salary *= (1 + salary_final_mean) 
 
-            home_growths = rng.normal(home_mu, home_sigma, num_samples)
-            home_final_mean = np.mean(home_growths)
-            home_final_sigma = np.std(home_growths)
-            local_hv *= (1 + home_final_mean) # compounds the home growth
+            # user does not own a house (false case)
+            if (bought_a_house == False):
+                # the user cannot afford a house yet. rent simulated for the year
+                if (local_salary < float(home_and_child_df["Salary Needed to Buy a House"].iloc[0])):
+                    rent_or_mortgage_payment = 0.3 * (local_salary)
+                # the user has the money to make a down payment
+                else:
+                    # finds the corresponding home_value (also based on spending category) 
+                    rounded_salary = round(local_salary / 20000) * 20000
+                    home_and_rent_df = home_and_rental_table[home_and_rental_table["Starting Salary"] == rounded_salary]
+                    if (spending_type == "eager"):
+                        home_value = float(home_and_rent_df["Home Value (3x) (eager spending)"].iloc[0])
+                    else:
+                        home_value = float(home_and_rent_df["Home Value (2.5x) (conservative spending)"].iloc[0])
+                    # assumes a 9 % downpayment (first time home buyer) 
+                    principal = 0.91 * (home_value) # the money that is loaned
+                    rent_or_mortgage_payment = 0.09 * (home_value) # the down payment (the housing cost for the year)
+                    annual_payment = get_home_payment(principal) # sets the annual payment (will be used in future iterations)
+                    mortgage_balance = principal                # sets the mortgage balance (to be used in future iterations)
+            # user owns a house
+            else: 
+                # compounds the growth rate of home value
+                local_hv *= float(home_and_child_df["Average Home Growth Rate"].iloc[0])
+                # checks if the user has remaining mortgage
+                if (mortgage_balance > 0):
+                    interest = mortgagee_balance * annual_rate
+                    principal_paid = annual_payment - interest # calulate portion of payment that goes towards the mortgage
+                    # checks if this would be the last payment (the mortgage would be paid off). 
+                    if (principal_paid > mortgage_balance):
+                        principal_paid = mortgage_balance
+                        effective_payment = interest + principal_paid # if this is the last payment, only what is left of the mortgage will be accounted for in the yearly housing fee
+                    else:
+                        effective_payment = annual_payment # if it is not the last year, the entire annual_payment is accounted for in the yearly housing fee
+                    mortgage_balance -= principle_paid
+                    rent_or_mortgage_payment = effective_payment
 
-            market_returns = rng.normal(inv_mu, inv_sigma, num_samples)
-            returns_final_mean = np.mean(market_returns)
-            returns_final_sigma = np.std(market_returns) # need an investment value
-
-            local_ira = local_ira * (1 + returns_final_mean) + ira_contrib
-            local_401k = (local_401k * (1 + returns_final_mean)) + (local_salary * contrib_401k_pct)
-            local_taxable = local_taxable * (1 + returns_final_mean) + max(0, local_salary * (1 - lifestyle_spend_pct - tax_rate - contrib_401k_pct))
-            debt_payment = mb * mortgage_apr
-            mb = max(0, mb - debt_payment)
-            spending = local_salary * lifestyle_spend_pct + (child_cost if year < child_years else 0)
-        W = local_hv - mb + local_ira + local_401k + local_taxable - spending
-        networths.append(W)
+            tax_payment = get_tax_value(locations_df, location, local_salary)
+            after_tax_income = local_salary - tax_payment
+            yearly_spending = 0
+            if (spending_type == "eager"):
+                yearly_spending = 0.5 * (after_tax_income) # follows the 80-20 rule (approximating 30 percent for housing)
+            else:
+                yearly_spending = 0.4 * (after_tax_income) # follows a 70-30 rule
+            total_cash += after_tax_income - rent_or_mortgage_payment - yearly_spending
+            
+        local_networth = total_cash + home_value - mortgage_balance
+        networths.append(local_networth)
     summary = {
         "mean": np.mean(networths),
         "stdev": np.std(networths),
