@@ -1,4 +1,3 @@
-salary_table
 Career_ID,Career_Title,Category,Starting Salary,Salary_growth_mean,salary_growth_sd
 11-0000,Management Occupations,Management,79900,0.029334123,0.051840396
 11-1010,Chief Executives,Management,126080,0.019124652,0.039595862
