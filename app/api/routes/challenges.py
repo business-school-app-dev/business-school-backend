@@ -42,6 +42,72 @@ def get_questions():
         "questions": questions_list
     }), 200
 
+# batch submission
+@challenges_bp.route('/challenges/submit-batch', methods=['POST'])
+def submit_batch_answers():
+    session = current_app.session
+    data = request.get_json()
+    
+    # Check for required fields: user_id (expected to be the numeric ID) and answers array
+    user_id = data.get("user_id")
+    user_answers = data.get("answers")
+    
+    if user_id is None or not user_answers:
+        return jsonify({
+            "success": False,
+            "error": "Missing user_id or answers array"
+        }), 400
+
+    user = session.get(User, user_id)
+    if not user:
+        return jsonify({
+            "success": False,
+            "error": f"User with ID {user_id} not found."
+        }), 404
+
+    total_trophies_gained = 0
+    results = []
+
+    # 2. Process all answers in the batch sent by the mobile app
+    for answer_data in user_answers:
+        question_id = answer_data.get("questionId")
+        submitted_answer = answer_data.get("answer")
+        
+        question = session.get(Questions, question_id)
+        is_correct = False
+        
+        # Determine correctness and calculate trophies
+        if question and question.correct_answer == submitted_answer:
+            is_correct = True
+            
+            # Map difficulty to trophies
+            if question.question_difficulty == 1:
+                trophies = 5
+            elif question.question_difficulty == 2:
+                trophies = 10
+            elif question.question_difficulty == 3:
+                trophies = 20
+            else:
+                trophies = 0 
+                
+            total_trophies_gained += trophies
+        
+        results.append({
+            "question_id": question_id,
+            "is_correct": is_correct
+        })
+
+    # 3. Update user trophies and commit ONCE
+    user.trophies += total_trophies_gained
+    session.commit()
+    
+    return jsonify({
+        "success": True,
+        "message": "Answers processed successfully.",
+        "trophies_gained": total_trophies_gained,
+        "results": results
+    }), 200
+
 
 
 @challenges_bp.route('/answers', methods=['POST'])
