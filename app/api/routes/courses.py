@@ -133,32 +133,77 @@ def get_planTrim(course_id):
 @courses_bp.route("/recommend", methods=["GET"])
 def recommend_courses():
     """
-    Recommend UMD courses based on user's comfort level (1-3) and time commitment (credits).
-    Example: /recommend?comfort=2&max_credits=3
-    """
-    comfort = int(request.args.get("comfort", 1))  # 1, 2, or 3
-    max_credits = int(request.args.get("max_credits", 3))  # max allowed credits
+    Recommend UMD courses based on user's comfort level and time commitment (credits).
 
-    # Map comfort to difficulty
+    Query params:
+      - comfort: 'beginner' | 'intermediate' | 'advanced' | 'n/a'
+      - max_credits: integer as string (e.g. '3') or 'n/a'
+
+    Behavior:
+      - comfort != 'n/a' and max_credits != 'n/a':
+          filter by BOTH comfort level AND credits (original behavior)
+      - comfort != 'n/a' and max_credits == 'n/a':
+          filter by comfort level ONLY (ignore credits)
+      - comfort == 'n/a' and max_credits != 'n/a':
+          filter by credits ONLY (ignore comfort level)
+      - comfort == 'n/a' and max_credits == 'n/a':
+          return ALL BMGT courses
+    """
+    # Raw query params
+    comfort_raw = (request.args.get("comfort") or "").lower()
+    credits_raw = (request.args.get("max_credits") or "").lower()
+
+    # Map comfort level -> course level digit
     level_map = {
-        1: "1",  # easy
-        2: "2",  # moderate
-        3: "3"   # challenging
+        "beginner": "1",      # BMGT1xx
+        "intermediate": "2",  # BMGT2xx
+        "advanced": "3",      # BMGT3xx
     }
-    level = level_map.get(comfort, "1")
+
+    # Determine if we have a comfort filter
+    if comfort_raw and comfort_raw != "n/a":
+        level = level_map.get(comfort_raw)
+    else:
+        level = None  # no comfort filter
+
+    # Determine if we have a credit filter
+    max_credits = None
+    if credits_raw and credits_raw != "n/a":
+        try:
+            max_credits = int(credits_raw)
+        except ValueError:
+            return jsonify({"error": "max_credits must be an integer or 'N/A'"}), 400
 
     # Fetch all BMGT courses
     r = requests.get(f"{UMD_API}?dept_id=BMGT")
     if r.status_code != 200:
         return jsonify({"error": "Failed to fetch courses"}), 500
-
     all_courses = r.json()
 
-    # Filter by level and credits
+    # --------------------------
+    # Build filtered list based on which filters we have
+    # --------------------------
+    def matches_level(course):
+        if not level:
+            return True
+        return re.match(rf"BMGT{level}\d{{2}}", course["course_id"])
+
+    def matches_credits(course):
+        if max_credits is None:
+          # no credit filter
+            return True
+        try:
+            return int(course.get("credits", 0)) <= max_credits
+        except (TypeError, ValueError):
+            return False
+
+    # Apply filters:
+    # - both level and credits
+    # - only level
+    # - only credits
     recommended = [
         c for c in all_courses
-        if re.match(rf"BMGT{level}\d{{2}}", c["course_id"])
-        and int(c.get("credits", 0)) <= max_credits
+        if matches_level(c) and matches_credits(c)
     ]
 
     if not recommended:
@@ -170,18 +215,24 @@ def recommend_courses():
             "course_id": c["course_id"],
             "name": c["name"],
             "credits": c.get("credits"),
-            "description": c.get("description", ""), 
+            "description": c.get("description", ""),
             "restrictions": c.get("restrictions", "")
         }
         for c in recommended
     ]
 
+    # Build response metadata
+    response_comfort = comfort_raw if comfort_raw else "n/a"
+    response_difficulty = f"{level}xx" if level else "all"
+    response_max_credits = max_credits if max_credits is not None else "all"
+
     return jsonify({
-        "comfort_level": comfort,
-        "difficulty": f"{level}xx",
-        "max_credits": max_credits,
-        "recommendations": results[:10]  # limit output
+        "comfort_level": response_comfort,
+        "difficulty": response_difficulty,
+        "max_credits": response_max_credits,
+        "recommendations": results[:10],  # limit output
     })
+
 
 # ----------------------------
 # Root route: API overview

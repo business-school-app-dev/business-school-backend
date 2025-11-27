@@ -1,15 +1,19 @@
-from datetime import datetime
+from datetime import datetime, date as date_type
 from typing import Optional
+import uuid
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import (
     String,
     BigInteger,
     DateTime,
+    Date,
+    Text,
     text,
     JSON,
     ForeignKey
 )
+from sqlalchemy.dialects.postgresql import UUID
 
 from app import Base
 
@@ -77,3 +81,22 @@ class Jobs(Base):
     name: Mapped[str] = mapped_column(String(64))
     starting: Mapped[int] = mapped_column()
     growth: Mapped[float] = mapped_column()
+
+class Event(Base):
+    __tablename__ = "events"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        nullable=False,
+    )
+
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    date: Mapped[date_type] = mapped_column(Date, nullable=False)
+    time: Mapped[Optional[str]] = mapped_column(String(64))
+    description: Mapped[Optional[str]] = mapped_column(Text)
+    url: Mapped[str] = mapped_column(String(500), nullable=False)
+    time_updated: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<Event {self.id} {self.title!r}>"
