@@ -160,6 +160,7 @@ def simulate_core(
         annual_payment = 0.0
         mortgage_balance = 0.0
 
+
         for _year in range(years):
             # salary evolution
             growth = rng.normal(salary_mu, salary_sigma)
@@ -357,6 +358,7 @@ def simulation_run():
     }
     """
     data = request.get_json() or {}
+    years = int(data.get("years", 20))
 
     try:
         params, locations_df, home_and_rental_table = get_params(data)
@@ -380,7 +382,7 @@ def simulation_run():
 @simulation_bp.route("/simulation/params", methods=["POST"]) 
 def map_inputs():
     data = request.get_json()
-    params = get_params(data)
+    params, _, _ = get_params(data)
     return jsonify(params)
 
    

@@ -16,7 +16,7 @@ if PROJECT_ROOT not in sys.path:
 # how many different user configurations to simulate
 N_CONFIGS = 200  # you can bump this later to 500/1000 offline
 SAMPLES_PER_CONFIG = 200  # same as your API
-
+YEARS_CHOICES = [10, 11, 12,13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60]
 
 def main():
     app = create_app()
@@ -56,6 +56,7 @@ def main():
             "location",
             "num_children",
             "spending",
+            "years",
 
             # numeric params from get_params
             "starting_salary",
@@ -72,6 +73,7 @@ def main():
             # simulation outputs
             "mean_networth",
             "stdev_networth",
+            
         ]
 
         with open(out_path, "w", newline="", encoding="utf-8") as f_out:
@@ -85,12 +87,14 @@ def main():
                 location = random.choice(location_values)
                 num_children = random.choice(num_children_options)
                 spending = random.choice(spending_options)
+                years = random.choice(YEARS_CHOICES)
 
                 data = {
                     "career_id": career_id,
                     "location": location,
                     "num_children": num_children,
                     "spending": spending,
+                    "years": years,
                 }
 
                 try:
@@ -105,6 +109,7 @@ def main():
                         locations_df,
                         home_and_rental_table,
                         num_samples=SAMPLES_PER_CONFIG,
+                        years=years,
                     )
                 except Exception as e:
                     print(f"[{i}] Skipping config (simulation error): {e}")
@@ -115,6 +120,7 @@ def main():
                     "location": location,
                     "num_children": num_children,
                     "spending": spending,
+                    "years": years,
                     "starting_salary": params["starting_salary"],
                     "salary_growth_mean": params["salary_growth_mean"],
                     "salary_growth_sd": params["salary_growth_sd"],
