@@ -39,23 +39,15 @@ def get_home_payment(principal):
     yearly_payment_denom = ((1 + annual_rate) ** term_years) - 1
     yearly_payment = principal * (yearly_payment_num / yearly_payment_denom)
 
-
-@simulation_bp.route("/simulation/run", methods=["POST"]) 
-def run_simulation():
-    '''
-    For the Monte-Carlo simulation, plans to run the simulation based on
-    input data from the sliders, returning raw data for frontend to then
-    plot.
-    '''
-    # Extracting all the data from the csv.
+def get_params(data):
+     # Extracting all the data from the csv.
     # data will be in the following form: 
     # {
     #     "job_id" : career_id              (if id data is not sent, then there would be a category and job field)
     #     "location" : location,
     #     "num_children" : num_children
-     #    "spending" : eager/conservative
+    #     "spending" : eager/conservative
     # }
-    data = request.get_json()
 
     # extracting input fields
     career_id = data.get("career_id")
@@ -84,10 +76,47 @@ def run_simulation():
     # extracting relavant location information and adjusts the starting salary based on location
     locations_df = locations_table[locations_table["State"] == location]
     starting_salary *= float(locations_df["inc-nat ratio"].iloc[0])
-
-    # extracting relevant household/rent/child information
     home_and_child_df = home_and_child_table[home_and_child_table["State"] == location]
+    home_growth_rate = float(home_and_child_df["Average Home Growth Rate"].iloc[0])
+    salary_to_buy_house = float(home_and_child_df["Salary Needed to Buy a House"].iloc[0])
+    annual_child_cost = float(home_and_child_df["Cost of Raising Child"].iloc[0])
 
+    # extracting tax rates
+    effective_tax_rate_100k = float(locations_df["eff_tax_rate_100k"].iloc[0])
+    effective_tax_rate_starting = (get_tax_value(locations_df, location, starting_salary)) / starting_salary
+
+    if (spending_type == "eager"): 
+        savings_rate = 0.2
+        hv_to_salary_rat = 3
+
+    else:
+        savings_rate = 0.3
+        hv_to_salary_rat = 2
+
+    params = {
+                "starting_salary": starting_salary, # slider
+                "salary_growth_mean" : salary_mu,
+                "salary_growth_sd" : salary_sigma, 
+
+                "rent_pc_baseline" : 0.3,
+                "salary_to_buy_house": salary_to_buy_house,
+                "hv_to_salary_ratio" : hv_to_salary_rat,    # slider
+                "home_growth_rate": home_growth_rate,
+
+                "savings_rate" : savings_rate,      # slider
+
+                "num_children" : num_children,       # slider
+                "annual_child_cost" : annual_child_cost,
+
+                "effective_tax_rate_100k" : effective_tax_rate_100k,
+                "effective_tax_rate_starting" : effective_tax_rate_starting
+    
+            }
+    return params
+
+
+def run_simulation(params):
+    
     num_samples = 10000
     years = 20
     rng = np.random.default_rng(seed=42) # creates a generator
@@ -95,7 +124,7 @@ def run_simulation():
     networths = []
     rng = np.random.default_rng(seed=42)
     for i in range(num_samples):
-        local_salary = starting_salary
+        local_salary = starting_salary # param
         total_cash = 0
 
         bought_a_house = False
@@ -114,7 +143,7 @@ def run_simulation():
         
         for year in range(years): 
             # computes and adds salary growth
-            salary_growths = rng.normal(salary_mu, salary_sigma, 100) 
+            salary_growths = rng.normal(salary_mu, salary_sigma, 100) # params
             salary_final_mean = np.mean(salary_growths)
             salary_final_sigma = np.std(salary_growths)
             local_salary *= (1 + salary_final_mean) 
@@ -122,13 +151,13 @@ def run_simulation():
             # user does not own a house (false case)
             if (bought_a_house == False):
                 # the user cannot afford a house yet. rent simulated for the year
-                if (local_salary < float(home_and_child_df["Salary Needed to Buy a House"].iloc[0])):
-                    rent_or_mortgage_payment = 0.3 * (local_salary)
+                if (local_salary < float(home_and_child_df["Salary Needed to Buy a House"].iloc[0])): # param
+                    rent_or_mortgage_payment = 0.3 * (local_salary) # param
                 # the user has the money to make a down payment
                 else:
                     # finds the corresponding home_value (also based on spending category) 
                     rounded_salary = round(local_salary / 20000) * 20000
-                    home_and_rent_df = home_and_rental_table[home_and_rental_table["Starting Salary"] == rounded_salary]
+                    home_and_rent_df = home_and_rental_table[home_and_rental_table["Starting Salary"] == rounded_salary] # param
                     if (spending_type == "eager"):
                         home_value = float(home_and_rent_df["Home Value (3x) (eager spending)"].iloc[0])
                     else:
@@ -141,7 +170,7 @@ def run_simulation():
             # user owns a house
             else: 
                 # compounds the growth rate of home value
-                local_hv *= float(home_and_child_df["Average Home Growth Rate"].iloc[0])
+                local_hv *= float(home_and_child_df["Average Home Growth Rate"].iloc[0]) # param
                 # checks if the user has remaining mortgage
                 if (mortgage_balance > 0):
                     interest = mortgagee_balance * annual_rate
@@ -155,9 +184,9 @@ def run_simulation():
                     mortgage_balance -= principle_paid
                     rent_or_mortgage_payment = effective_payment
 
-            tax_payment = get_tax_value(locations_df, location, local_salary)
+            tax_payment = get_tax_value(locations_df, location, local_salary) # param?
             after_tax_income = local_salary - tax_payment
-            yearly_spending = 0
+            yearly_spending = 0 # param
             if (spending_type == "eager"):
                 yearly_spending = 0.5 * (after_tax_income) # follows the 80-20 rule (approximating 30 percent for housing)
             else:
@@ -174,3 +203,13 @@ def run_simulation():
     return jsonify({
         "summary": summary,
     })
+
+
+
+@simulation_bp.route("/simulation/run", methods=["POST"]) 
+def map_inputs():
+    data = request.get_json()
+    params = get_params(data)
+    return jsonify(params)
+
+   
