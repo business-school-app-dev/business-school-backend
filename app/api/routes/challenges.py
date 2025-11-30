@@ -88,11 +88,11 @@ def submit_batch_answers():
             
             # Map difficulty to trophies
             if question.question_difficulty == 1:
-                trophies = 5
+                trophies = 25
             elif question.question_difficulty == 2:
-                trophies = 10
+                trophies = 50
             elif question.question_difficulty == 3:
-                trophies = 20
+                trophies = 100
             else:
                 trophies = 0 
 
