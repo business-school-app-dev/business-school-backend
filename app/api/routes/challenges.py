@@ -76,6 +76,8 @@ def submit_batch_answers():
     for answer_data in user_answers:
         question_id = answer_data.get("questionId")
         submitted_answer = answer_data.get("answer")
+
+        time_taken = answer_data.get("timeTaken")
         
         question = session.get(Questions, question_id)
         is_correct = False
@@ -93,8 +95,16 @@ def submit_batch_answers():
                 trophies = 20
             else:
                 trophies = 0 
-                
-            total_trophies_gained += trophies
+
+            #calculates the new trophy amount based off of the time taken
+            if time_taken is not None and time_taken > 0:
+                multiplier = 0.9 ** time_taken
+                new_trophies = int(trophies * multiplier)
+            else:
+                new_trophies = trophies
+
+
+            total_trophies_gained += new_trophies
         
         results.append({
             "question_id": question_id,
