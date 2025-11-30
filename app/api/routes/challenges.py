@@ -100,6 +100,7 @@ def submit_batch_answers():
             if time_taken is not None and time_taken > 0:
                 multiplier = 0.9 ** time_taken
                 new_trophies = int(trophies * multiplier)
+                new_trophies = max(1, new_trophies)
             else:
                 new_trophies = trophies
 
