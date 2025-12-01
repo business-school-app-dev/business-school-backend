@@ -180,6 +180,13 @@ def recommend_courses():
         return jsonify({"error": "Failed to fetch courses"}), 500
     all_courses = r.json()
 
+
+    try:
+        all_courses = r.json()
+    except requests.exceptions.JSONDecodeError:
+        # If the external API sends non-JSON (like HTML error), catch it here
+        return jsonify({"error": "External API returned non-JSON data."}), 502
+
     # --------------------------
     # Build filtered list based on which filters we have
     # --------------------------
