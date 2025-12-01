@@ -49,9 +49,9 @@ def get_jobs_by_category(category):
                 "message": f"Category '{category}' not found"
             }), 400
 
-        # Load CSV file (skip first row which is just "salary_table")
+        # Load CSV file
         csv_path = os.path.join(current_app.root_path, "salary_table.csv")
-        df = pd.read_csv(csv_path, skiprows=1)
+        df = pd.read_csv(csv_path)
 
         # Filter jobs by category
         category_jobs = df[df['Category'] == csv_category]
