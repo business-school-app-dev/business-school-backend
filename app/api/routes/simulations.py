@@ -243,7 +243,7 @@ def simulate_core(
 
 def run_simulation(params, locations_df: pd.DataFrame, home_and_rental_table: pd.DataFrame):
     
-    num_samples = 200
+    num_samples = 100
     years = 20
     rng = np.random.default_rng(seed=42) # creates a generator
     starting_salary = params["starting_salary"]
