@@ -125,7 +125,7 @@ def simulate_core(
     params: dict,
     locations_df: pd.DataFrame,
     home_and_rental_table: pd.DataFrame,
-    num_samples: int = 200,
+    num_samples: int = 100,
     years: int = 20,
 ) -> dict:
     """
@@ -362,12 +362,17 @@ def simulation_run():
 
     try:
         params, locations_df, home_and_rental_table = get_params(data)
-        summary = run_simulation(params, locations_df, home_and_rental_table)
+        summary = simulate_core(params=params,
+            locations_df=locations_df,
+            home_and_rental_table=home_and_rental_table,
+            num_samples=100,   # lighter for UI; adjust if you want
+            years=years,)
 
         # for debugging, you can also return params if you want to see what was used
         return jsonify(
             {
                 "summary": summary,
+                "years": years,
                 "params": {
                     k: v
                     for k, v in params.items()
@@ -379,10 +384,37 @@ def simulation_run():
         # basic error reporting for now
         return jsonify({"error": str(e)}), 400
 
-@simulation_bp.route("/simulation/params", methods=["POST"]) 
+@simulation_bp.route("/simulation/params", methods=["POST"])
 def map_inputs():
-    data = request.get_json()
-    params, _, _ = get_params(data)
-    return jsonify(params)
+    """
+    POST /simulation/params
+
+    Expects:
+    {
+      "career_id": <str>,
+      "location": <str>,
+      "num_children": <int>,
+      "spending": "eager" | "conservative"
+    }
+
+    Returns:
+    {
+      "params": { ...numeric derived params... }
+    }
+    """
+    data = request.get_json() or {}
+
+    try:
+        params, _, _ = get_params(data)
+
+        public_params = {
+            k: v
+            for k, v in params.items()
+            if k not in ("location", "spending_type")
+        }
+
+        return jsonify({"params": public_params})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
    
