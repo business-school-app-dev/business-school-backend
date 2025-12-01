@@ -355,6 +355,8 @@ def simulation_run():
       "location": <str>,
       "num_children": <int>,
       "spending": "eager" | "conservative"
+      "years": <int>  # optional, defaults to 20, 
+      "num_samples": <int>  # optional, defaults to 100
     }
     """
     data = request.get_json() or {}
@@ -365,8 +367,9 @@ def simulation_run():
         summary = simulate_core(params=params,
             locations_df=locations_df,
             home_and_rental_table=home_and_rental_table,
-            num_samples=100,   # lighter for UI; adjust if you want
-            years=years,)
+            num_samples=int(data.get("num_samples", 100)),   # lighter for UI; adjust if you want
+            years=years,
+        )
 
         # for debugging, you can also return params if you want to see what was used
         return jsonify(
