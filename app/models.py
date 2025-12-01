@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import (
     String,
     BigInteger,
+    Integer,
     DateTime,
     Date,
     Text,
@@ -100,3 +101,22 @@ class Event(Base):
 
     def __repr__(self) -> str:
         return f"<Event {self.id} {self.title!r}>"
+
+
+class QuizScore(Base):
+    __tablename__ = "quiz_scores"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    username: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
+    score: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=text("now()"),
+        nullable=False,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=text("now()"),
+        onupdate=text("now()"),
+        nullable=False,
+    )
