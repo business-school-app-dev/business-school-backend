@@ -11,3 +11,4 @@ loguru>=0.7
 numpy
 pandas
 requests
+gunicorn

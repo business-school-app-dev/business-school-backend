@@ -354,7 +354,7 @@ def simulation_run():
       "career_id": <int>,
       "location": <str>,
       "num_children": <int>,
-      "spending": "eager" | "conservative"
+      "spending": "eager" | "conservative",
       "years": <int>  # optional, defaults to 20, 
       "num_samples": <int>  # optional, defaults to 100
     }
