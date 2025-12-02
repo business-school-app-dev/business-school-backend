@@ -200,7 +200,7 @@ def recommend_courses():
           # no credit filter
             return True
         try:
-            return int(course.get("credits", 0)) <= max_credits
+            return int(course.get("credits", 0)) == max_credits
         except (TypeError, ValueError):
             return False
 
@@ -233,11 +233,18 @@ def recommend_courses():
     response_difficulty = f"{level}xx" if level else "all"
     response_max_credits = max_credits if max_credits is not None else "all"
 
+    # sort courses by credits ascending
+    sorted_results = sorted(
+    results, 
+    key=lambda course: int(course.get('credits') or 0), 
+    reverse=False
+)
+
     return jsonify({
         "comfort_level": response_comfort,
         "difficulty": response_difficulty,
         "max_credits": response_max_credits,
-        "recommendations": results[:10],  # limit output
+        "recommendations": sorted_results          # previously results[:10],  which limited output, excluding other courses
     })
 
 
