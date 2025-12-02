@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, Blueprint, current_app
 app = Flask(__name__)
 import random
 from sqlalchemy import func
-from app.models import Questions, User
+from app.models import Questions, User, QuizScore
 
 # challenges_bp = Blueprint("challenges", __name__, url_prefix="/challenges")
 challenges_bp = Blueprint("challenges", __name__)
@@ -53,20 +53,20 @@ def submit_batch_answers():
     data = request.get_json()
     
     # Check for required fields: user_id (expected to be the numeric ID) and answers array
-    user_id = data.get("user_id")
+    username = data.get("username")
     user_answers = data.get("answers")
     
-    if user_id is None or not user_answers:
+    if username is None or not user_answers:
         return jsonify({
             "success": False,
-            "error": "Missing user_id or answers array"
+            "error": "Missing username or answers array"
         }), 400
 
-    user = session.get(User, user_id)
+    user = session.get(QuizScore, username)
     if not user:
         return jsonify({
             "success": False,
-            "error": f"User with ID {user_id} not found."
+            "error": f"User with username {username} not found."
         }), 404
 
     total_trophies_gained = 0
@@ -114,7 +114,7 @@ def submit_batch_answers():
         })
 
     # 3. Update user trophies and commit ONCE
-    user.trophies += total_trophies_gained
+    user.score += total_trophies_gained
     session.commit()
     
     return jsonify({
@@ -175,13 +175,12 @@ def submit_batch_answers():
 def get_top_ten():
     session = current_app.session
 
-    top_ten = session.query(User).order_by(User.trophies.desc()).limit(10).all()
+    top_ten = session.query(QuizScore).order_by(QuizScore.score.desc()).limit(10).all()
 
     users_list = [
             {
-                "id": user.id,
                 "username": user.username,
-                "trophies": user.trophies
+                "score": user.score
             }
             for user in top_ten
         ]
@@ -190,24 +189,3 @@ def get_top_ten():
         "users": users_list,
     }), 200
 
-'''
-
-
-
-@app.route('/topten'm methods=['GET'])
-def get_top_ten():
-    count = session.query(userData.userID).count()
-    users = select(userData).order_by(desc(userData.c.trophies))
-    
-    # Experimental code to get the top 10 users from the database using sql alchemy
-    if(count < 10) {
-        top_users = users[0:count]
-    } else {
-        top_users = users[:10]
-    }
-
-    return jsonify({
-        "success": True,
-        "user_list": top_users
-    })
-'''
