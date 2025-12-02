@@ -55,6 +55,7 @@ def get_params(data):
     location = data.get("location")
     num_children = data.get("num_children")
     spending_type = data.get("spending")
+    years = data.get("years")
 
     # defining paths to the parameter tables
     salaries_path = os.path.join(current_app.root_path, "salary_table.csv")
@@ -116,6 +117,8 @@ def get_params(data):
                                 # 🔹 these two are what run_simulation expects but your dict is missing
                 "location": location,
                 "spending_type": spending_type,
+
+                "years" : years
     
             }
     return params, locations_df, home_and_rental_table
@@ -240,110 +243,6 @@ def simulate_core(
 
     return {"mean": mean_networth, "stdev": stdev_networth}
 
-
-def run_simulation(params, locations_df: pd.DataFrame, home_and_rental_table: pd.DataFrame):
-    
-    num_samples = 100
-    years = 20
-    rng = np.random.default_rng(seed=42) # creates a generator
-    starting_salary = params["starting_salary"]
-    salary_mu = params["salary_growth_mean"]
-    salary_sigma = params["salary_growth_sd"]
-
-    home_growth_rate = params["home_growth_rate"]
-    salary_to_buy_house = params["salary_to_buy_house"]
-    annual_child_cost = params["annual_child_cost"]
-    savings_rate = params["savings_rate"]
-    num_children = params["num_children"]
-
-    location = params["location"]
-    spending_type = params["spending_type"]
-
-    networths = []
-    rng = np.random.default_rng(seed=42)
-    for _ in range(num_samples):
-        local_salary = starting_salary # param
-        total_cash = 0
-
-        bought_a_house = False
-        home_value = 0
-        principal = 0
-        
-        annual_rate = 0.05
-        loan_term_years = 30
-        annual_payment = 0
-
-        mortgage_balance = 0
-        principal_paid = 0
-        effective_payment = 0
-
-        rent_or_mortgage_payment = 0
-        
-        for year in range(years): 
-            # computes and adds salary growth
-            salary_growths = rng.normal(salary_mu, salary_sigma, 100) # params
-            salary_final_mean = np.mean(salary_growths)
-            salary_final_sigma = np.std(salary_growths)
-            local_salary *= (1.0 + salary_final_mean) 
-
-            # user does not own a house (false case)
-            if (bought_a_house == False):
-                # the user cannot afford a house yet. rent simulated for the year
-                if (local_salary < salary_to_buy_house): # param
-                    rent_or_mortgage_payment = 0.3 * (local_salary) # param
-                # the user has the money to make a down payment
-                else:
-                    # finds the corresponding home_value (also based on spending category) 
-                    rounded_salary = round(local_salary / 20000) * 20000
-                    home_and_rent_df = home_and_rental_table[home_and_rental_table["Starting Salary"] == rounded_salary] # param
-                    if spending_type == "eager":
-                        hv_col = "Home Value (3x) (eager spending)"
-                    else:
-                        hv_col = "Home Value (2.5x) (conservative spending)"
-
-                    home_value = float(home_and_rent_df[hv_col].iloc[0])
-                    principal = 0.91 * (home_value) # the money that is loaned
-                    rent_or_mortgage_payment = 0.09 * (home_value) # the down payment (the housing cost for the year)
-                    annual_payment = get_home_payment(principal) # sets the annual payment (will be used in future iterations)
-                    mortgage_balance = principal                # sets the mortgage balance (to be used in future iterations)
-                    bought_a_house = True
-                
-            # user owns a house
-            else: 
-                # compounds the growth rate of home value
-                home_value *= (1.0 + home_growth_rate) # param
-                # checks if the user has remaining mortgage
-                if (mortgage_balance > 0):
-                    interest = mortgage_balance * annual_rate
-                    principal_paid = annual_payment - interest # calulate portion of payment that goes towards the mortgage
-                    # checks if this would be the last payment (the mortgage would be paid off). 
-                    if (principal_paid > mortgage_balance):
-                        principal_paid = mortgage_balance
-                        effective_payment = interest + principal_paid # if this is the last payment, only what is left of the mortgage will be accounted for in the yearly housing fee
-                    else:
-                        effective_payment = annual_payment # if it is not the last year, the entire annual_payment is accounted for in the yearly housing fee
-                    mortgage_balance -= principal_paid
-                    rent_or_mortgage_payment = effective_payment
-
-            tax_payment = get_tax_value(locations_df, location, local_salary) # param?
-            after_tax_income = local_salary - tax_payment
-            yearly_spending = 0 # param
-            if (spending_type == "eager"):
-                yearly_spending = 0.5 * (after_tax_income) # follows the 80-20 rule (approximating 30 percent for housing)
-            else:
-                yearly_spending = 0.4 * (after_tax_income) # follows a 70-30 rule
-            child_cost_total = annual_child_cost * num_children
-            total_cash += after_tax_income - rent_or_mortgage_payment - yearly_spending - child_cost_total
-            
-        local_networth = total_cash + home_value - mortgage_balance
-        networths.append(local_networth)
-
-    mean_networth = float(np.mean(networths))
-    stdev_networth = float(np.std(networths))
-
-    return {"mean": mean_networth, "stdev": stdev_networth}
-
-
 @simulation_bp.route("/simulation/run", methods=["POST"])
 def simulation_run():
     """
@@ -376,48 +275,42 @@ def simulation_run():
             {
                 "summary": summary,
                 "years": years,
-                "params": {
-                    k: v
-                    for k, v in params.items()
-                    if k not in ("location", "spending_type")
-                },
+                "params": params
             }
         )
     except Exception as e:
         # basic error reporting for now
         return jsonify({"error": str(e)}), 400
 
-@simulation_bp.route("/simulation/params", methods=["POST"])
-def map_inputs():
-    """
-    POST /simulation/params
+@simulation_bp.route("/simulation/sliders", methods=["POST"])
+def run_simulation_sliders():
 
-    Expects:
-    {
-      "career_id": <str>,
-      "location": <str>,
-      "num_children": <int>,
-      "spending": "eager" | "conservative"
-    }
-
-    Returns:
-    {
-      "params": { ...numeric derived params... }
-    }
-    """
     data = request.get_json() or {}
 
-    try:
-        params, _, _ = get_params(data)
+    location = data.get("location")
+    years = data.get("years")
+    salaries_path = os.path.join(current_app.root_path, "salary_table.csv")
+    home_and_rental_path = os.path.join(current_app.root_path, "Home Value & Rent Value Table - Sheet1.csv")
+    locations_path = os.path.join(current_app.root_path, "locations_table.csv")
 
-        public_params = {
-            k: v
-            for k, v in params.items()
-            if k not in ("location", "spending_type")
-        }
+    # reading data from the csvs 
+    locations_table = pd.read_csv(locations_path)
+    home_and_rental_table = pd.read_csv(home_and_rental_path)
+    locations_df = locations_table[locations_table["State"] == location]
 
-        return jsonify({"params": public_params})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
+    summary = simulate_core(params=data,
+            locations_df=locations_df,
+            home_and_rental_table=home_and_rental_table,
+            num_samples=100,   # lighter for UI; adjust if you want
+            years=years,
+        )
+    return jsonify(
+            {
+                "summary": summary,
+                "years": years,
+                "params": data
+            }
+        )
+    
 
    
