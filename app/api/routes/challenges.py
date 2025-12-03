@@ -52,22 +52,22 @@ def submit_batch_answers():
     session = current_app.session
     data = request.get_json()
     
-    # Check for required fields: user_id (expected to be the numeric ID) and answers array
-    username = data.get("username")
+    # Check for required fields: username and answers array
+    username = (data.get("username") or "").strip()
     user_answers = data.get("answers")
     
-    if username is None or not user_answers:
+    if not username or not user_answers:
         return jsonify({
             "success": False,
             "error": "Missing username or answers array"
         }), 400
 
-    user = session.get(QuizScore, username)
+    # Look up by username (not primary key) and create the row if it does not exist yet.
+    user = session.query(QuizScore).filter_by(username=username).one_or_none()
     if not user:
-        return jsonify({
-            "success": False,
-            "error": f"User with username {username} not found."
-        }), 404
+        user = QuizScore(username=username, score=0)
+        session.add(user)
+        session.flush()  # ensure we have an id before updating score
 
     total_trophies_gained = 0
     results = []
@@ -188,4 +188,3 @@ def get_top_ten():
         "success": True,
         "users": users_list,
     }), 200
-
