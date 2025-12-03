@@ -8,7 +8,7 @@ from app.models import Questions, User, QuizScore
 challenges_bp = Blueprint("challenges", __name__)
 
 
-
+ 
 
 def get_difficulty():
     session = current_app.session
@@ -71,6 +71,7 @@ def submit_batch_answers():
 
     total_trophies_gained = 0
     results = []
+    num_correct = 0
 
     # 2. Process all answers in the batch sent by the mobile app
     for answer_data in user_answers:
@@ -85,6 +86,7 @@ def submit_batch_answers():
         # Determine correctness and calculate trophies
         if question and question.correct_answer == submitted_answer:
             is_correct = True
+            num_correct += 1
             
             # Map difficulty to trophies
             if question.question_difficulty == 1:
@@ -121,7 +123,8 @@ def submit_batch_answers():
         "success": True,
         "message": "Answers processed successfully.",
         "trophies_gained": total_trophies_gained,
-        "results": results
+        "results": results,
+        "score" : num_correct
     }), 200
 
 

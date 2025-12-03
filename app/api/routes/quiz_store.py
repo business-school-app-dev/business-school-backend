@@ -5,6 +5,8 @@ from app.models import QuizScore
 
 quiz_store_bp = Blueprint("quiz", __name__)
 
+BAD_USERNAMES = {"n/a", "na", "none", "-"}
+
 
 @quiz_store_bp.route("/quiz/score", methods=["POST"])
 def upsert_quiz_score():
@@ -16,10 +18,22 @@ def upsert_quiz_score():
     username = (payload.get("username") or "").strip()
     score = payload.get("score")
 
-    if not username or score is None:
+    if score is None:
         return (
             jsonify({"success": False, "error": "username and score are required"}),
             400,
+        )
+
+    # If the client chose not to provide a username (e.g., skip leaderboard), do nothing.
+    if not username or username.lower() in BAD_USERNAMES:
+        return (
+            jsonify(
+                {
+                    "success": True,
+                    "message": "Score not recorded because no username was provided",
+                }
+            ),
+            200,
         )
 
     try:
