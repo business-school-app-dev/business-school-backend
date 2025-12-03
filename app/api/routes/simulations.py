@@ -288,29 +288,38 @@ def run_simulation_sliders():
     data = request.get_json() or {}
 
     location = data.get("location")
-    years = data.get("years")
+    years = int(data.get("years", 20))  # Default to 20 if not provided
+
+    # Debug logging
+    print(f"Slider request - location: {location}, years: {years}")
+    print(f"Full params: {data}")
+
     salaries_path = os.path.join(current_app.root_path, "salary_table.csv")
     home_and_rental_path = os.path.join(current_app.root_path, "Home Value & Rent Value Table - Sheet1.csv")
     locations_path = os.path.join(current_app.root_path, "locations_table.csv")
 
-    # reading data from the csvs 
+    # reading data from the csvs
     locations_table = pd.read_csv(locations_path)
     home_and_rental_table = pd.read_csv(home_and_rental_path)
     locations_df = locations_table[locations_table["State"] == location]
 
-    summary = simulate_core(params=data,
-            locations_df=locations_df,
-            home_and_rental_table=home_and_rental_table,
-            num_samples=100,   # lighter for UI; adjust if you want
-            years=years,
-        )
-    return jsonify(
-            {
-                "summary": summary,
-                "years": years,
-                "params": data
-            }
-        )
+    try:
+        summary = simulate_core(params=data,
+                locations_df=locations_df,
+                home_and_rental_table=home_and_rental_table,
+                num_samples=100,   # lighter for UI; adjust if you want
+                years=years,
+            )
+        return jsonify(
+                {
+                    "summary": summary,
+                    "years": years,
+                    "params": data
+                }
+            )
+    except Exception as e:
+        print(f"Error in slider simulation: {str(e)}")
+        return jsonify({"error": str(e)}), 500
     
 
    
