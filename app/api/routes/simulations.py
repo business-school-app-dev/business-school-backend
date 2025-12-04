@@ -76,6 +76,7 @@ def get_params(data):
     starting_salary = float(salary_row["Starting Salary"].iloc[0])
     salary_mu = float(salary_row["Salary_growth_mean"].iloc[0])
     salary_sigma = float(salary_row["salary_growth_sd"] .iloc[0])
+    job_name = salary_row["Career_Title"].iloc[0]
 
     # extracting relavant location information and adjusts the starting salary based on location
     locations_df = locations_table[locations_table["State"] == location]
@@ -118,7 +119,8 @@ def get_params(data):
                 "location": location,
                 "spending_type": spending_type,
 
-                "years" : years
+                "years" : years,
+                "job_name" : job_name
     
             }
     return params, locations_df, home_and_rental_table
