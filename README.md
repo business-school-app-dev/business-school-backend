@@ -212,3 +212,8 @@ postgresql+psycopg://fwc_user:fwc_pass@localhost:5433/fwc_db
 Don’t commit your local .env file — it’s in .gitignore
 
 Everyone’s DB setup is reproducible via Docker + Alembic
+
+
+## RENDER URL 
+
+https://business-school-backend.onrender.com/
