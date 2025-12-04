@@ -9,6 +9,7 @@ Run with:
 
 import sys
 from pathlib import Path
+from app import create_app
 
 # Make sure project root is on sys.path so `app` and `scraping` are importable
 ROOT_DIR = Path(__file__).resolve().parents[1]  # project-root/
@@ -33,10 +34,10 @@ def main():
     print("\n[1/2] Seeding questions from CSV...")
     load_questions()
     print("[1/2] ✅ Questions seeding complete.")
-
+    app = create_app()
     # Load events from events_enriched.json
     print("\n[2/2] Seeding events from JSON...")
-    load_events_from_json()
+    load_events_from_json(app)
     print("[2/2] ✅ Events seeding complete.")
 
     print("\n=== DB SEED FINISHED SUCCESSFULLY ===")
