@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, Blueprint, current_app
 app = Flask(__name__)
 import random
+from datetime import datetime, timezone, timedelta
+import pytz
 from sqlalchemy import func
 from app.models import Questions, User, QuizScore
 
@@ -23,6 +25,52 @@ def get_difficulty():
     
 
     return selected_questions
+
+@challenges_bp.route('/challenges/can-play', methods=['GET'])
+def can_play_quiz():
+    """Check if user can play the quiz based on their last submission time."""
+    session = current_app.session
+    username = request.args.get('username', '').strip()
+    
+    if not username:
+        return jsonify({
+            "success": True,
+            "can_play": True,
+            "message": "No username provided, can play"
+        }), 200
+    
+    user = session.query(QuizScore).filter_by(username=username).one_or_none()
+    
+    if not user or not user.updated_at:
+        return jsonify({
+            "success": True,
+            "can_play": True,
+            "message": "First time playing"
+        }), 200
+    
+    # Get current time in EST
+    est = pytz.timezone('America/New_York')
+    now_est = datetime.now(est)
+    
+    # Convert last submission time to EST
+    last_submission = user.updated_at
+    if last_submission.tzinfo is None:
+        last_submission = pytz.utc.localize(last_submission)
+    last_submission_est = last_submission.astimezone(est)
+    
+    # Calculate next midnight EST after last submission
+    next_midnight = (last_submission_est + timedelta(days=1)).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
+    
+    can_play = now_est >= next_midnight
+    
+    return jsonify({
+        "success": True,
+        "can_play": can_play,
+        "next_available": next_midnight.isoformat() if not can_play else None,
+        "message": "You can play!" if can_play else f"Please wait until {next_midnight.strftime('%I:%M %p')} EST to play again."
+    }), 200
 
 @challenges_bp.route('/challenges/questions', methods=['GET'])
 def get_questions():
@@ -190,4 +238,39 @@ def get_top_ten():
     return jsonify({
         "success": True,
         "users": users_list,
+    }), 200
+
+@challenges_bp.route('/challenges/user-stats', methods=['GET'])
+def get_user_stats():
+    """Get a specific user's rank and score."""
+    session = current_app.session
+    username = request.args.get('username', '').strip()
+    
+    if not username:
+        return jsonify({
+            "success": False,
+            "message": "Username is required"
+        }), 400
+    
+    # Find the user
+    user = session.query(QuizScore).filter_by(username=username).one_or_none()
+    
+    if not user:
+        return jsonify({
+            "success": False,
+            "message": "User not found"
+        }), 404
+    
+    # Calculate rank by counting users with higher scores
+    rank = session.query(func.count(QuizScore.id)).filter(
+        QuizScore.score > user.score
+    ).scalar() + 1
+    
+    return jsonify({
+        "success": True,
+        "user": {
+            "username": user.username,
+            "score": user.score,
+            "rank": rank
+        }
     }), 200
