@@ -22,7 +22,9 @@ print(">>> CSV path:", CSV_PATH, "exists?", os.path.exists(CSV_PATH))
 engine = create_engine(DATABASE_URL, future=True)
 
 
-def main():
+def load_questions(engine=None):
+    if engine is None:
+        engine = create_engine(DATABASE_URL, future=True)
     with Session(engine) as session:
         with open(CSV_PATH, newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
@@ -64,4 +66,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    load_questions()
