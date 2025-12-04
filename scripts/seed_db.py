@@ -17,13 +17,13 @@ sys.path.append(str(ROOT_DIR))
 # ---- Import seeding entrypoints from your existing scripts ----
 
 # 1) Questions loader (you already have this with main())
-from app.scripts.load_questions_from_csv import main as load_questions
+from app.scripts.load_questions_from_csv import load_questions
 
 # 2) Events loader: adjust this import to match your actual filename
 #    For example, if your file is scraping/load_events_from_json.py
 #    and it has a `main()` at the bottom, do:
 #       from scraping.load_events_from_json import main as load_events_main
-from app.scraping.ingest_events import main as load_events_from_json  # <-- change name if needed
+from app.scraping.ingest_events import load_events_from_json  # <-- change name if needed
 
 
 def main():
