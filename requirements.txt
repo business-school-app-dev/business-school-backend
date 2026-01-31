@@ -13,3 +13,4 @@ pandas
 requests
 gunicorn
 psycopg2
+pytz==2025.2
