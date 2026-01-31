@@ -21,9 +21,9 @@ def get_scraping_events():
     NOW READS FROM POSTGRESQL DATABASE.
     """
 
-    days = request.args.get("days", default=7, type=int)
+    days = request.args.get("days", default=60, type=int)
     if days is None or days <= 0:
-        days = 7
+        days = 60
 
     today = datetime.now(timezone.utc).date()
     end_date = today + timedelta(days=days)
