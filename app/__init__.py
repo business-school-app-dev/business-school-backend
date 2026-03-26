@@ -56,13 +56,8 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config["SECRET_KEY"] = settings.SECRET_KEY
 
-    # 2. Create the SQLAlchemy engine (connection pool to Postgres)
-    engine = create_engine(
-        settings.DATABASE_URL,
-        pool_size=10,
-        max_overflow=10,
-        pool_pre_ping=True,
-    )
+    # 2. Create the SQLAlchemy engine (connection to SQLite)
+    engine = create_engine(settings.DATABASE_URL)
 
     # 3. Create a scoped session (thread-safe session object per request)
     SessionLocal = scoped_session(

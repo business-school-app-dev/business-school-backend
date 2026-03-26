@@ -10,7 +10,6 @@ from app.models import Questions, User, QuizScore
 challenges_bp = Blueprint("challenges", __name__)
 
 
- 
 
 def get_difficulty():
     session = current_app.session
