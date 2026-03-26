@@ -1,4 +1,4 @@
-from datetime import datetime, date as date_type
+from datetime import datetime, date as date_type, timezone
 from typing import Optional
 import uuid
 
@@ -34,7 +34,7 @@ class User(Base):
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        server_default=text("now()"),
+        default=lambda: datetime.now(timezone.utc),
     )
     
     trophies: Mapped[int] = mapped_column()
@@ -106,17 +106,17 @@ class Event(Base):
 class QuizScore(Base):
     __tablename__ = "quiz_scores"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     username: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
     score: Mapped[int] = mapped_column(Integer, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        server_default=text("now()"),
+        default=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        server_default=text("now()"),
-        onupdate=text("now()"),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
