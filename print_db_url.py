@@ -1,6 +1,6 @@
 import os
 
-DEFAULT_URL = "postgresql+psycopg://fwc_user:fwc_pass@localhost:5433/fwc_db"
+DEFAULT_URL = "postgresql+psycopg://fwc_user:your-secure-password@localhost:5433/fwc_db"
 
 db_url = os.getenv("DATABASE_URL", DEFAULT_URL)
 

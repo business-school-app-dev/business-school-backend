@@ -27,7 +27,7 @@ def get_url() -> str:
     """
     url = os.getenv(
         "DATABASE_URL",
-        "postgresql+psycopg://fwc_user:fwc_pass@localhost:5433/fwc_db",
+        "postgresql+psycopg://fwc_user:your-secure-password@localhost:5433/fwc_db",
     )
 
     # If Render is giving something like postgres://..., normalize it

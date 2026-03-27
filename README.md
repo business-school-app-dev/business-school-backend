@@ -72,7 +72,7 @@ Database: fwc_db
 
 User: fwc_user
 
-Password: fwc_pass
+Password: (set in your .env file)
 
 Expose Postgres on localhost:5433
 
@@ -88,12 +88,13 @@ xxxxxx         postgres:16   0.0.0.0:5433->5432/tcp
 
 ## 🌱 3. Configure Environment Variables
 
-Create a .env file in the project root (same folder as alembic.ini):
+Create a .env file in the project root (same folder as alembic.ini) with your database credentials:
 
-DATABASE_URL=postgresql+psycopg://fwc_user:fwc_pass@localhost:5433/fwc_db
+```
+DATABASE_URL=postgresql+psycopg://fwc_user:your-secure-password@localhost:5433/fwc_db
+```
 
-
-We include a .env.example in the repo — you can copy it:
+We include a .env.example in the repo — copy it and update with your own secure values:
 
 cp .env.example .env
 
@@ -119,7 +120,7 @@ This creates all your tables (like users) in the Postgres container.
 To confirm:
 
 ### Optional, if you have psql installed
-psql "postgresql://fwc_user:fwc_pass@localhost:5433/fwc_db" -c "\dt"
+psql "postgresql://fwc_user:your-secure-password@localhost:5433/fwc_db" -c "\dt"
 
 
 Expected:
@@ -195,7 +196,7 @@ alembic upgrade head
 alembic revision --autogenerate -m "add new table"
 
 ### Check tables
-psql "postgresql://fwc_user:fwc_pass@localhost:5433/fwc_db" -c "\dt"
+psql "postgresql://fwc_user:your-secure-password@localhost:5433/fwc_db" -c "\dt"
 
 ### Run Flask API
 flask run
@@ -207,7 +208,7 @@ All models live in app/models.py
 Migrations live in migrations/versions/
 
 Database URL standard:
-postgresql+psycopg://fwc_user:fwc_pass@localhost:5433/fwc_db
+postgresql+psycopg://fwc_user:your-secure-password@localhost:5433/fwc_db
 
 Don’t commit your local .env file — it’s in .gitignore
 
