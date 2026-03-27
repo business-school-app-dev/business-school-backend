@@ -22,12 +22,12 @@ def get_url() -> str:
     """
     Return the database URL for Alembic.
 
-    Prefer DATABASE_URL (Render), fall back to local dev DB.
-    Also normalize the prefix so SQLAlchemy 2.x + psycopg works.
+    Prefer DATABASE_URL env variable (from .env or production).
+    Fall back to local SQLite development database.
     """
     url = os.getenv(
         "DATABASE_URL",
-        "postgresql+psycopg://fwc_user:fwc_pass@localhost:5433/fwc_db",
+        "sqlite:///./dev.db",
     )
 
     # If Render is giving something like postgres://..., normalize it

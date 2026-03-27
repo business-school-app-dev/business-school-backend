@@ -10,7 +10,7 @@ from app.models import Questions  # adjust if your model class is named differen
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql+psycopg://fwc_user:fwc_pass@localhost:5433/fwc_db",
+    "postgresql+psycopg://fwc_user:your-secure-password@localhost:5433/fwc_db",
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # .../app

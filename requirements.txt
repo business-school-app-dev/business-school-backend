@@ -1,6 +1,5 @@
 flask>=3
 sqlalchemy>=2.0
-psycopg[binary]>=3.2
 alembic>=1.13
 flask-migrate>=4.0
 pydantic>=2.8
@@ -12,5 +11,4 @@ numpy
 pandas
 requests
 gunicorn
-psycopg2
 pytz==2025.2
