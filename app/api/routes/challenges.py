@@ -9,8 +9,6 @@ from app.models import Questions, User, QuizScore
 # challenges_bp = Blueprint("challenges", __name__, url_prefix="/challenges")
 challenges_bp = Blueprint("challenges", __name__)
 
-
-
 def get_difficulty():
     session = current_app.session
     easy = []
@@ -173,53 +171,6 @@ def submit_batch_answers():
         "results": results,
         "score" : num_correct
     }), 200
-
-
-# @challenges_bp.route('/answers', methods=['POST'])
-# def submit_answer():
-#     session = current_app.session
-#     is_correct = False
-#     question_found = None
-#     data = request.get_json()
-#     # needs to get: {"user_id": "user123", "question_id": 5, "answer": 1}
-
-#     question = session.get(Questions, data["question_id"])
-#     if not question:
-#         return jsonify({
-#             "success": False,
-#             "error": "Question not found"
-#         }), 404
-#     if question.correct_answer == data["answer"]:
-#         is_correct = True
-#         if not add_trophies(data["user_id"], question.question_difficulty):
-#             return jsonify({
-#                 "success": False,
-#                 "error": "User not found"
-#             }), 404
-    
-#     return jsonify({
-#         "success": True,
-#         "is_correct": is_correct,
-        
-#     }), 200
-# def add_trophies(user_id, question_difficulty):
-#     session = current_app.session
-
-#     user = session.get(User, user_id)
-#     if not user:
-#         return False
-
-#     if question_difficulty == 1:
-#         user.trophies += 5
-#     elif question_difficulty == 2:
-#         user.trophies += 10
-#     elif question_difficulty == 3:
-#         user.trophies += 20
-    
-#     session.commit()
-    
-#     return True
-    
 
 @challenges_bp.route('/topten', methods=['GET'])
 def get_top_ten():

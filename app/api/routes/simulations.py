@@ -322,6 +322,3 @@ def run_simulation_sliders():
     except Exception as e:
         print(f"Error in slider simulation: {str(e)}")
         return jsonify({"error": str(e)}), 500
-    
-
-   
