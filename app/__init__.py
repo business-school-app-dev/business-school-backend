@@ -1,8 +1,18 @@
 # app/__init__.py
+import logging
+import sys
 from flask import Flask
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, DeclarativeBase
 from .config import Settings
+
+# Configure logging for Gunicorn
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+logger = logging.getLogger(__name__)
 
 
 """create core tables

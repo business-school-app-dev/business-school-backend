@@ -1,11 +1,16 @@
 from flask import Flask, request, jsonify, Blueprint, current_app
-app = Flask(__name__)
+import logging
+import sys
 import random
 from datetime import datetime, timezone, timedelta
 import pytz
 from sqlalchemy import func
 from app.models import Questions, User, QuizScore
 
+# Set up logger for Gunicorn
+logger = logging.getLogger(__name__)
+
+app = Flask(__name__)
 # challenges_bp = Blueprint("challenges", __name__, url_prefix="/challenges")
 challenges_bp = Blueprint("challenges", __name__)
 
@@ -26,8 +31,10 @@ def get_difficulty():
 @challenges_bp.route('/challenges/can-play', methods=['GET'])
 def can_play_quiz():
     """Check if user can play the quiz based on their last submission time."""
+    logger.info("/challenges/can-play endpoint called")
     session = current_app.session
     username = request.args.get('username', '').strip()
+    logger.info(f"Username: {username}")
     
     if not username:
         return jsonify({
@@ -62,46 +69,62 @@ def can_play_quiz():
     
     can_play = now_est >= next_midnight
     
-    return jsonify({
+    response = {
         "success": True,
         "can_play": can_play,
         "next_available": next_midnight.isoformat() if not can_play else None,
         "message": "You can play!" if can_play else f"Please wait until {next_midnight.strftime('%I:%M %p')} EST to play again."
-    }), 200
+    }
+    logger.info(f"/challenges/can-play response: {response}")
+    return jsonify(response), 200
 
 @challenges_bp.route('/challenges/questions', methods=['GET'])
 def get_questions():
-    daily_questions = get_difficulty()
-
+    logger.info("/challenges/questions endpoint called")
+    logger.info(f"Request headers: {dict(request.headers)}")
     
-    questions_list = []
-    
-    for question in daily_questions:
-        if question is not None:
-            questions_list.append({
-                "id": question.id,
-                "text": question.question,
-                "difficulty": question.question_difficulty,
-                "options": question.question_choices,
-                "correct_answer": question.correct_answer,
-            })
-    
-    return jsonify({
-        "success": True,
-        "questions": questions_list
-    }), 200
+    try:
+        daily_questions = get_difficulty()
+        logger.info(f"Retrieved {len([q for q in daily_questions if q])} questions from database")
+        
+        questions_list = []
+        
+        for question in daily_questions:
+            if question is not None:
+                questions_list.append({
+                    "id": question.id,
+                    "text": question.question,
+                    "difficulty": question.question_difficulty,
+                    "options": question.question_choices,
+                    "correct_answer": question.correct_answer,
+                })
+        
+        logger.info(f"Returning {len(questions_list)} questions")
+        response = {
+            "success": True,
+            "questions": questions_list
+        }
+        logger.info(f"Response: {response}")
+        return jsonify(response), 200
+    except Exception as e:
+        logger.exception("Exception in /challenges/questions")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 # batch submission
 @challenges_bp.route('/challenges/submit-batch', methods=['POST'])
 def submit_batch_answers():
+    logger.info("/challenges/submit-batch endpoint called")
     session = current_app.session
     data = request.get_json()
+    logger.info(f"Request data: {data}")
     
     # Check for required fields: username and answers array
     username = (data.get("username") or "").strip()
     user_answers = data.get("answers")
+    logger.info(f"Username: {username}, Answers count: {len(user_answers) if user_answers else 0}")
     
     if not username or not user_answers:
+        logger.info("Missing username or answers array")
         return jsonify({
             "success": False,
             "error": "Missing username or answers array"
@@ -110,6 +133,7 @@ def submit_batch_answers():
     # Look up by username (not primary key) and create the row if it does not exist yet.
     user = session.query(QuizScore).filter_by(username=username).one_or_none()
     if not user:
+        logger.info(f"Creating new user: {username}")
         user = QuizScore(username=username, score=0)
         session.add(user)
         session.flush()  # ensure we have an id before updating score
@@ -163,6 +187,7 @@ def submit_batch_answers():
     # 3. Update user trophies and commit ONCE
     user.score += total_trophies_gained
     session.commit()
+    logger.info(f"User {username} score updated: +{total_trophies_gained} trophies, correct answers: {num_correct}")
     
     return jsonify({
         "success": True,
@@ -174,9 +199,11 @@ def submit_batch_answers():
 
 @challenges_bp.route('/topten', methods=['GET'])
 def get_top_ten():
+    logger.info("/topten endpoint called")
     session = current_app.session
 
     top_ten = session.query(QuizScore).order_by(QuizScore.score.desc()).limit(10).all()
+    logger.info(f"Retrieved {len(top_ten)} users from leaderboard")
 
     users_list = [
             {
@@ -185,18 +212,23 @@ def get_top_ten():
             }
             for user in top_ten
         ]
-    return jsonify({
+    response = {
         "success": True,
         "users": users_list,
-    }), 200
+    }
+    logger.info(f"/topten response: {response}")
+    return jsonify(response), 200
 
 @challenges_bp.route('/challenges/user-stats', methods=['GET'])
 def get_user_stats():
     """Get a specific user's rank and score."""
+    logger.info("/challenges/user-stats endpoint called")
     session = current_app.session
     username = request.args.get('username', '').strip()
+    logger.info(f"Username: {username}")
     
     if not username:
+        logger.info("No username provided")
         return jsonify({
             "success": False,
             "message": "Username is required"
@@ -204,8 +236,10 @@ def get_user_stats():
     
     # Find the user
     user = session.query(QuizScore).filter_by(username=username).one_or_none()
+    logger.info(f"User found: {user is not None}")
     
     if not user:
+        logger.info(f"User '{username}' not found in database")
         return jsonify({
             "success": False,
             "message": "User not found"
@@ -215,12 +249,15 @@ def get_user_stats():
     rank = session.query(func.count(QuizScore.id)).filter(
         QuizScore.score > user.score
     ).scalar() + 1
+    logger.info(f"User rank: {rank}, score: {user.score}")
     
-    return jsonify({
+    response = {
         "success": True,
         "user": {
             "username": user.username,
             "score": user.score,
             "rank": rank
         }
-    }), 200
+    }
+    logger.info(f"/challenges/user-stats response: {response}")
+    return jsonify(response), 200
