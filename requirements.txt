@@ -1,5 +1,4 @@
 flask>=3
-flask-cors>=4.0
 sqlalchemy>=2.0
 alembic>=1.13
 flask-migrate>=4.0

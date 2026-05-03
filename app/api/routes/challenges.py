@@ -71,40 +71,25 @@ def can_play_quiz():
 
 @challenges_bp.route('/challenges/questions', methods=['GET'])
 def get_questions():
-    try:
-        daily_questions = get_difficulty()
-        
-        questions_list = []
-        
-        for question in daily_questions:
-            if question is not None:
-                questions_list.append({
-                    "id": question.id,
-                    "text": question.question,
-                    "difficulty": question.question_difficulty,
-                    "options": question.question_choices,
-                    "correct_answer": question.correct_answer,
-                })
-        
-        # If no questions found, return helpful error message
-        if not questions_list:
-            return jsonify({
-                "success": False,
-                "questions": [],
-                "error": "No questions available. Please contact support.",
-                "debug_info": "Database may not be seeded with questions"
-            }), 200  # Still 200 to avoid breaking frontend, but success: false
-        
-        return jsonify({
-            "success": True,
-            "questions": questions_list
-        }), 200
-    except Exception as e:
-        return jsonify({
-            "success": False,
-            "error": "Failed to load questions",
-            "detail": str(e)
-        }), 500
+    daily_questions = get_difficulty()
+
+    
+    questions_list = []
+    
+    for question in daily_questions:
+        if question is not None:
+            questions_list.append({
+                "id": question.id,
+                "text": question.question,
+                "difficulty": question.question_difficulty,
+                "options": question.question_choices,
+                "correct_answer": question.correct_answer,
+            })
+    
+    return jsonify({
+        "success": True,
+        "questions": questions_list
+    }), 200
 
 # batch submission
 @challenges_bp.route('/challenges/submit-batch', methods=['POST'])

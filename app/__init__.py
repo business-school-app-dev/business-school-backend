@@ -1,6 +1,5 @@
 # app/__init__.py
 from flask import Flask
-from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, DeclarativeBase
 from .config import Settings
@@ -73,21 +72,11 @@ def create_app() -> Flask:
     app.engine = engine
     app.session = SessionLocal
 
-    # 4. Enable CORS for all routes - CRITICAL for App Store frontend
-    CORS(app, resources={
-        r"/api/*": {
-            "origins": "*",
-            "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
-            "allow_headers": ["Content-Type", "Authorization"],
-            "supports_credentials": False
-        }
-    })
-
-    # 5. Register your blueprints/routes
+    # 4. Register your blueprints/routes
     from .api import register_blueprints
     register_blueprints(app)
 
-    # 6. Clean up sessions after each request
+    # 5. Clean up sessions after each request
     @app.teardown_appcontext
     def shutdown_session(exception=None):
         SessionLocal.remove()
