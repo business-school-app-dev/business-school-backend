@@ -6,13 +6,26 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, DeclarativeBase
 from .config import Settings
 
-# Configure logging for Gunicorn
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)]
-)
-logger = logging.getLogger(__name__)
+# Configure logging for Gunicorn / systemd
+def configure_logging():
+    """Configure logging to output to stderr (which systemd/journalctl captures)."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(name)s] [%(levelname)s] %(message)s",
+        stream=sys.stderr,  # systemd captures stderr by default
+        force=True  # Force reconfiguration even if already configured
+    )
+    
+    # Ensure the root logger and app logger propagate properly
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)
+    
+    # Disable propagation from Werkzeug (Flask's underlying library) to reduce noise
+    logging.getLogger('werkzeug').setLevel(logging.WARNING)
+    
+    return logging.getLogger(__name__)
+
+logger = configure_logging()
 
 
 """create core tables

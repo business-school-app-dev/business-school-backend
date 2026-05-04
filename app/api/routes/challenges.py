@@ -7,8 +7,9 @@ import pytz
 from sqlalchemy import func
 from app.models import Questions, User, QuizScore
 
-# Set up logger for Gunicorn
+# Get logger - inherits from root logger configured in app/__init__.py
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 app = Flask(__name__)
 # challenges_bp = Blueprint("challenges", __name__, url_prefix="/challenges")

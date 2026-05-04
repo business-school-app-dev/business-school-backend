@@ -9,8 +9,9 @@ from datetime import datetime, timedelta, timezone, date
 from flask import Blueprint, jsonify, request, current_app
 from app.models import Event  # <-- IMPORTANT: import Event model
 
-# Set up logger for Gunicorn
+# Get logger - inherits from root logger configured in app/__init__.py
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 scraping_events_bp = Blueprint("scraping_events", __name__)
 
